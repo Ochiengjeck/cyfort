@@ -1,26 +1,183 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Admin-editable brand tokens (defaults; overridden per-request by
+     components/site/theme-style.tsx from the SiteSettings row). */
+  --color-brand-dark: #0a0a0b;
+  --color-brand-ink: #141414;
+  --color-brand-gold: #c9a227;
+  --color-brand-gold-dark: #9c7a3c;
+  --color-brand-gold-light: #e8ce8f;
+  --color-brand-paper: #f2f3f5;
+  --color-brand-paper-alt: #ffffff;
+  --color-brand-muted: #6b7280;
+
+  /* Fixed foreground pairings — NOT admin-editable. Keeps every
+     background/foreground combination legible regardless of which brand
+     colors an admin chooses. */
+  --color-on-dark: #ffffff;
+  --color-on-gold: var(--color-brand-dark);
+  --color-on-paper: var(--color-brand-ink);
+  --color-muted-on-dark: rgba(255, 255, 255, 0.65);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-brand-dark: var(--color-brand-dark);
+  --color-brand-ink: var(--color-brand-ink);
+  --color-brand-gold: var(--color-brand-gold);
+  --color-brand-gold-dark: var(--color-brand-gold-dark);
+  --color-brand-gold-light: var(--color-brand-gold-light);
+  --color-brand-paper: var(--color-brand-paper);
+  --color-brand-paper-alt: var(--color-brand-paper-alt);
+  --color-brand-muted: var(--color-brand-muted);
+  --color-on-dark: var(--color-on-dark);
+  --color-on-gold: var(--color-on-gold);
+  --color-on-paper: var(--color-on-paper);
+  --color-muted-on-dark: var(--color-muted-on-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background: var(--color-brand-paper-alt);
+  color: var(--color-on-paper);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Minimal prose styling for Markdown-rendered CMS content (case studies,
+   insights, careers) — intentionally hand-rolled rather than pulling in a
+   typography plugin for a handful of selectors. */
+.prose-cyfort {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--color-brand-muted);
+}
+.prose-cyfort > * + * {
+  margin-top: 1.25em;
+}
+.prose-cyfort h1,
+.prose-cyfort h2,
+.prose-cyfort h3 {
+  color: var(--color-on-paper);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.prose-cyfort h1 {
+  font-size: 1.75em;
+}
+.prose-cyfort h2 {
+  font-size: 1.4em;
+}
+.prose-cyfort h3 {
+  font-size: 1.15em;
+}
+.prose-cyfort a {
+  color: var(--color-brand-gold);
+  text-decoration: underline;
+}
+.prose-cyfort ul,
+.prose-cyfort ol {
+  padding-left: 1.4em;
+}
+.prose-cyfort ul {
+  list-style: disc;
+}
+.prose-cyfort ol {
+  list-style: decimal;
+}
+.prose-cyfort blockquote {
+  border-left: 2px solid var(--color-brand-gold);
+  padding-left: 1em;
+  font-style: italic;
+  color: var(--color-on-paper);
+}
+.prose-cyfort code {
+  font-family: var(--font-mono), monospace;
+  background: var(--color-brand-paper);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25em;
+  font-size: 0.9em;
+}
+
+/* Short-viewport hero fallback — keeps the homepage hero inside the
+   viewport on short/landscape screens (e.g. laptops with heavy browser
+   chrome, landscape phones). */
+@media (max-height: 700px) {
+  .hero-headline {
+    font-size: 2.75rem;
+    line-height: 1.1;
+  }
+  .hero-paragraph {
+    display: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes scroll-cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
+@keyframes mesh-blob-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(3%, -4%) scale(1.06);
+  }
+  66% {
+    transform: translate(-3%, 3%) scale(0.96);
+  }
+}
+
+@keyframes shine-sweep {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-12deg);
+  }
+}
+
+@keyframes radar-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* The track renders its item list twice back-to-back, so shifting by
+       exactly half its width loops seamlessly into the duplicate copy. */
+    transform: translateX(-50%);
+  }
+}
+
+/* Respect the OS-level reduced-motion preference for every CSS-driven
+   animation and transition (the scroll cue, mesh-blob drift, quote-card
+   shine sweep, marquee scroll, and all hover/card transitions) — framer-motion's own
+   animations are handled separately via <MotionConfig reducedMotion="user">
+   in app/(site)/layout.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

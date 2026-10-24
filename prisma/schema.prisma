@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SiteSettings {
+  id              String   @id @default(cuid())
+  siteName        String   @default("CyFort Technologies Limited")
+  shortName       String   @default("CYFORT")
+  tagline         String   @default("Securing Digital Growth Across Africa")
+  categoryLine    String   @default("TECHNOLOGY · ADVISORY · CYBERSECURITY")
+  metaDescription String?
+  logoMediaId     String?
+  faviconMediaId  String?
+  contactEmail    String   @default("info@cyfort.africa")
+  contactPhone    String   @default("+254 7__ ___ ___")
+  contactAddress  String?
+  linkedinUrl     String?
+  twitterUrl      String?
+  facebookUrl     String?
+  footerText      String?
+
+  colorDark      String @default("#0A0A0B")
+  colorInk       String @default("#141414")
+  colorGold      String @default("#C9A227")
+  colorGoldDark  String @default("#9C7A3C")
+  colorGoldLight String @default("#E8CE8F")
+  colorPaper     String @default("#F2F3F5")
+  colorPaperAlt  String @default("#FFFFFF")
+  colorMuted     String @default("#6B7280")
+
+  updatedAt DateTime @updatedAt
+}
+
+model NavLink {
+  id           String   @id @default(cuid())
+  order        Int      @default(0)
+  label        String
+  href         String
+  openInNewTab Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model HomeHero {
+  id                String   @id @default(cuid())
+  eyebrow           String   @default("TECHNOLOGY · ADVISORY · CYBERSECURITY")
+  headlineLead      String   @default("Securing")
+  headlineEmphasis  String   @default("Digital Growth Across Africa")
+  primaryCtaLabel   String   @default("Explore Our Services")
+  primaryCtaHref    String   @default("/services")
+  secondaryCtaLabel String   @default("Talk to Us")
+  secondaryCtaHref  String   @default("/contact")
+  updatedAt         DateTime @updatedAt
+}
+
+model AboutContent {
+  id                   String   @id @default(cuid())
+  whoWeAreBody         String
+  pullQuote            String   @default("At CYFORT, we believe cybersecurity is no longer just an IT function — it is a business imperative.")
+  vision               String
+  mission              String
+  approachIntro        String
+  approachBody         String
+  comparisonLeftLabel  String   @default("Most Firms")
+  comparisonLeftText   String   @default("Begin with technology")
+  comparisonRightLabel String   @default("We")
+  comparisonRightText  String   @default("Begin With The Business")
+  closingEyebrow       String   @default("LOOKING AHEAD")
+  closingHeading       String   @default("Securing Tomorrow's Digital Africa")
+  closingBody          String
+  closingQuote         String   @default("Together, we help organizations secure today, prepare for tomorrow, and build confidence in a digital future.")
+  updatedAt            DateTime @updatedAt
+}
+
+model Differentiator {
+  id        String   @id @default(cuid())
+  order     Int      @default(0)
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id        String        @id @default(cuid())
+  order     Int           @default(0)
+  slug      String        @unique
+  name      String
+  summary   String
+  icon      String?
+  items     ServiceItem[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model ServiceItem {
+  id        String   @id @default(cuid())
+  serviceId String
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+  label     String
+  createdAt DateTime @default(now())
+}
+
+model Industry {
+  id        String   @id @default(cuid())
+  order     Int      @default(0)
+  name      String
+  blurb     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PromiseItem {
+  id        String   @id @default(cuid())
+  order     Int      @default(0)
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id           String   @id @default(cuid())
+  order        Int      @default(0)
+  name         String
+  role         String
+  bio          String?
+  photoMediaId String?
+  linkedinUrl  String?
+  email        String?
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model CaseStudy {
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  title        String
+  clientName   String
+  industryTag  String?
+  summary      String
+  body         String
+  coverMediaId String?
+  published    Boolean   @default(false)
+  publishedAt  DateTime?
+  order        Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model InsightPost {
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  title        String
+  excerpt      String
+  body         String
+  coverMediaId String?
+  authorName   String?
+  category     String?
+  published    Boolean   @default(false)
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model JobPosting {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  title          String
+  department     String?
+  location       String?
+  employmentType String?
+  summary        String
+  description    String
+  applyEmail     String?
+  published      Boolean   @default(false)
+  closesAt       DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  phone     String?
+  subject   String?
+  message   String
+  status    String   @default("new")
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  filename  String
+  alt       String?
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+}
