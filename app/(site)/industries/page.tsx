@@ -30,7 +30,11 @@ const INDUSTRY_SPANS = [
 ];
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Industries" });
+  return buildMetadata({
+    title: "Industries",
+    image: "/images/generated/banners/industries.jpg",
+    path: "/industries",
+  });
 }
 
 export default async function IndustriesPage() {

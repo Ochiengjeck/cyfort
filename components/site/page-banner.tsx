@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { SITE_URL } from "@/lib/metadata";
 import { Section } from "./section";
 import { Heading } from "./heading";
 import { Button } from "./button";
@@ -31,11 +32,23 @@ const DEFAULT_IMAGE: PageBannerImage = {
  * just Terms/Privacy) fall back to the original shared illustration.
  */
 export function PageBanner({ lead, emphasis, description, meta, breadcrumb, cta, image = DEFAULT_IMAGE }: PageBannerProps) {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumb.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.label,
+      ...(crumb.href ? { item: `${SITE_URL}${crumb.href}` } : {}),
+    })),
+  };
+
   return (
     <Section
       variant="dark"
       className="relative flex min-h-[48vh] flex-col justify-center overflow-hidden px-6 pb-16 pt-32 sm:min-h-[54vh] sm:pb-20 sm:pt-36"
     >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Image
         src={image.src}
         alt=""

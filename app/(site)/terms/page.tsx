@@ -10,7 +10,7 @@ import { Reveal } from "@/components/site/motion/reveal";
 export const instant = false;
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Terms of Service" });
+  return buildMetadata({ title: "Terms of Service", path: "/terms" });
 }
 
 export default async function TermsPage() {

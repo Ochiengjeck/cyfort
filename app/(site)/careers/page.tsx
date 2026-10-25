@@ -20,7 +20,11 @@ const JOB_SPANS = [
 ];
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Careers" });
+  return buildMetadata({
+    title: "Careers",
+    image: "/images/generated/banners/careers.jpg",
+    path: "/careers",
+  });
 }
 
 export default async function CareersPage() {

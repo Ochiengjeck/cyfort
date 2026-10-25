@@ -10,7 +10,11 @@ import { ContactForm } from "./contact-form";
 export const instant = false;
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Contact Us" });
+  return buildMetadata({
+    title: "Contact Us",
+    image: "/images/generated/banners/contact.jpg",
+    path: "/contact",
+  });
 }
 
 export default async function ContactPage() {

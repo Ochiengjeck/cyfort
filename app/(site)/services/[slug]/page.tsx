@@ -18,7 +18,12 @@ export const instant = false;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const service = await prisma.service.findUnique({ where: { slug } });
-  return buildMetadata({ title: service?.name ?? "Service", description: service?.summary });
+  return buildMetadata({
+    title: service?.name ?? "Service",
+    description: service?.summary,
+    image: "/images/generated/banners/services.jpg",
+    path: `/services/${slug}`,
+  });
 }
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {

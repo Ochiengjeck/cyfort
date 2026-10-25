@@ -24,7 +24,11 @@ import { StaggerGrid, StaggerItem } from "@/components/site/motion/stagger-grid"
 export const instant = false;
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Home" });
+  return buildMetadata({
+    title: "Home",
+    image: "/images/generated/hero-africa-network.jpg",
+    path: "/",
+  });
 }
 
 export default async function HomePage() {

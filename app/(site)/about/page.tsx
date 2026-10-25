@@ -15,7 +15,11 @@ import { MeshBlob } from "@/components/site/decorative/mesh-blob";
 export const instant = false;
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "About Us" });
+  return buildMetadata({
+    title: "About Us",
+    image: "/images/generated/banners/about.jpg",
+    path: "/about",
+  });
 }
 
 export default async function AboutPage() {

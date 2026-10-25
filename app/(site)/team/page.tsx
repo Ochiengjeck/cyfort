@@ -13,7 +13,11 @@ import { StaggerGrid, StaggerItem } from "@/components/site/motion/stagger-grid"
 export const instant = false;
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Our Team" });
+  return buildMetadata({
+    title: "Our Team",
+    image: "/images/generated/banners/team.jpg",
+    path: "/team",
+  });
 }
 
 function collectDescendants(rootId: string, byParent: Map<string, TeamMember[]>): TeamMember[] {

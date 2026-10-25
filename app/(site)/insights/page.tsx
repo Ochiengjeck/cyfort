@@ -12,7 +12,11 @@ import { StaggerGrid, StaggerItem } from "@/components/site/motion/stagger-grid"
 export const instant = false;
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Insights" });
+  return buildMetadata({
+    title: "Insights",
+    image: "/images/generated/banners/insights.jpg",
+    path: "/insights",
+  });
 }
 
 export default async function InsightsPage() {

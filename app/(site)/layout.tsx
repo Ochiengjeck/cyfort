@@ -1,6 +1,7 @@
 import { MotionConfig } from "framer-motion";
 import { Header } from "@/components/site/header";
 import { Footer } from "@/components/site/footer";
+import { OrganizationJsonLd } from "@/components/site/organization-json-ld";
 
 // The header/footer read live SiteSettings/NavLink data on every request —
 // opt this whole segment out of Cache Components' static-shell validation
@@ -14,6 +15,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
     // (Reveal, StaggerGrid, MobileNav) honor the OS prefers-reduced-motion
     // setting automatically — transforms are disabled, opacity still fades.
     <MotionConfig reducedMotion="user">
+      <OrganizationJsonLd />
       <div className="flex min-h-screen flex-col">
         <Header />
         <main className="flex-1">{children}</main>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { buildMetadata } from "@/lib/metadata";
+import { buildMetadata, SITE_URL, SITE_NAME } from "@/lib/metadata";
 import { resolveMediaUrl } from "@/lib/media";
 import { renderMarkdown } from "@/lib/markdown";
 import { Section } from "@/components/site/section";
@@ -17,7 +17,13 @@ export const instant = false;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await prisma.insightPost.findUnique({ where: { slug } });
-  return buildMetadata({ title: post?.title ?? "Insight", description: post?.excerpt });
+  const coverUrl = await resolveMediaUrl(post?.coverMediaId);
+  return buildMetadata({
+    title: post?.title ?? "Insight",
+    description: post?.excerpt,
+    image: coverUrl ?? "/images/generated/banners/insights.jpg",
+    path: `/insights/${slug}`,
+  });
 }
 
 function estimateReadingMinutes(body: string): number {
@@ -44,8 +50,25 @@ export default async function InsightDetailPage({ params }: { params: Promise<{ 
   const [lead, ...rest] = post.title.split(" ");
   const emphasis = rest.join(" ") || lead;
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    image: `${SITE_URL}${coverUrl ?? "/images/generated/banners/insights.jpg"}`,
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    author: { "@type": "Person", name: post.authorName ?? SITE_NAME },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/images/brand/cyfort-logo-full.png` },
+    },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <PageBanner
         lead={rest.length > 0 ? lead : ""}
         emphasis={emphasis}

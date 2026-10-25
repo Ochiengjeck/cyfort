@@ -10,7 +10,7 @@ import { Reveal } from "@/components/site/motion/reveal";
 export const instant = false;
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Privacy Policy" });
+  return buildMetadata({ title: "Privacy Policy", path: "/privacy" });
 }
 
 export default async function PrivacyPage() {

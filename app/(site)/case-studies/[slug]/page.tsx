@@ -18,7 +18,13 @@ export const instant = false;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const item = await prisma.caseStudy.findUnique({ where: { slug } });
-  return buildMetadata({ title: item?.title ?? "Case Study", description: item?.summary });
+  const coverUrl = await resolveMediaUrl(item?.coverMediaId);
+  return buildMetadata({
+    title: item?.title ?? "Case Study",
+    description: item?.summary,
+    image: coverUrl ?? "/images/generated/banners/case-studies.jpg",
+    path: `/case-studies/${slug}`,
+  });
 }
 
 export default async function CaseStudyDetailPage({ params }: { params: Promise<{ slug: string }> }) {

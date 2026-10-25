@@ -24,7 +24,11 @@ const SERVICE_SPANS = [
 ];
 
 export async function generateMetadata() {
-  return buildMetadata({ title: "Services" });
+  return buildMetadata({
+    title: "Services",
+    image: "/images/generated/banners/services.jpg",
+    path: "/services",
+  });
 }
 
 export default async function ServicesPage() {

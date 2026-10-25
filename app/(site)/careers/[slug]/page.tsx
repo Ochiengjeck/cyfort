@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Briefcase, CheckCircle2, ClipboardCheck, Handshake } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { buildMetadata } from "@/lib/metadata";
+import { buildMetadata, SITE_URL, SITE_NAME } from "@/lib/metadata";
 import { resolveMediaUrl } from "@/lib/media";
 import { renderMarkdown } from "@/lib/markdown";
 import { Section } from "@/components/site/section";
@@ -52,7 +52,13 @@ export const instant = false;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const job = await prisma.jobPosting.findUnique({ where: { slug } });
-  return buildMetadata({ title: job?.title ?? "Open Role", description: job?.summary });
+  const coverUrl = await resolveMediaUrl(job?.coverMediaId);
+  return buildMetadata({
+    title: job?.title ?? "Open Role",
+    description: job?.summary,
+    image: coverUrl ?? "/images/generated/banners/careers.jpg",
+    path: `/careers/${slug}`,
+  });
 }
 
 export default async function JobDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -71,8 +77,28 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
   const emphasis = rest.join(" ") || lead;
   const metaItems = [job.department, job.location, job.employmentType, job.salaryRange].filter(Boolean);
 
+  const jobPostingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: job.title,
+    description: job.description,
+    datePosted: job.createdAt.toISOString(),
+    ...(job.closesAt ? { validThrough: job.closesAt.toISOString() } : {}),
+    ...(job.employmentType ? { employmentType: job.employmentType } : {}),
+    hiringOrganization: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      sameAs: SITE_URL,
+      logo: `${SITE_URL}/images/brand/cyfort-logo-full.png`,
+    },
+    ...(job.location
+      ? { jobLocation: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: job.location } } }
+      : {}),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd) }} />
       <PageBanner
         lead={rest.length > 0 ? lead : ""}
         emphasis={emphasis}
