@@ -8,6 +8,7 @@ import { renderMarkdown } from "@/lib/markdown";
 import { Section } from "@/components/site/section";
 import { PageBanner } from "@/components/site/page-banner";
 import { CaseStudyCard } from "@/components/site/case-study-card";
+import { QuoteCard } from "@/components/site/quote-card";
 import { Heading } from "@/components/site/heading";
 import { Reveal } from "@/components/site/motion/reveal";
 import { StaggerGrid, StaggerItem } from "@/components/site/motion/stagger-grid";
@@ -37,6 +38,10 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
   ]);
   const [lead, ...rest] = item.title.split(" ");
   const emphasis = rest.join(" ") || lead;
+  const results = (item.resultsSummary ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
 
   return (
     <>
@@ -44,34 +49,90 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
         lead={rest.length > 0 ? lead : ""}
         emphasis={emphasis}
         description={item.clientName}
-        image={{ src: "/images/generated/banner-advisory-tech.jpg", alt: "" }}
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Case Studies", href: "/case-studies" }, { label: item.title }]}
+        image={{ src: "/images/generated/banners/case-studies.jpg", objectPosition: "center 30%" }}
         meta={
           item.industryTag ? (
-            <span className="mb-4 inline-flex items-center rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-medium text-brand-gold">
+            <span className="inline-flex items-center rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-medium text-brand-gold">
               {item.industryTag}
             </span>
           ) : undefined
         }
       />
 
-      <Section variant="paperAlt" className="px-6 py-20">
-        <Reveal className="mx-auto max-w-3xl">
-          {coverUrl ? (
-            <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-xl">
-              <Image src={coverUrl} alt={item.title} fill sizes="(min-width: 768px) 768px, 100vw" className="object-cover" />
+      <Section variant="paperAlt" className="px-6 py-24">
+        <div className="mx-auto grid max-w-5xl gap-14 lg:grid-cols-[1fr_280px] lg:items-start">
+          <Reveal>
+            {coverUrl ? (
+              <div className="relative mb-12 aspect-[16/9] w-full overflow-hidden rounded-xl">
+                <Image src={coverUrl} alt={item.title} fill sizes="(min-width: 768px) 768px, 100vw" className="object-cover" />
+              </div>
+            ) : null}
+
+            {results.length > 0 ? (
+              <div className="mb-12">
+                <p className="text-xs font-semibold uppercase tracking-wider text-brand-gold">The Results</p>
+                <div className="mt-5 flex flex-col gap-4 border-l-2 border-brand-gold/30 pl-6">
+                  {results.map((line) => (
+                    <p key={line} className="text-base leading-relaxed text-on-paper">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div className="prose-cyfort" dangerouslySetInnerHTML={{ __html: renderMarkdown(item.body) }} />
+
+            {item.testimonialQuote ? (
+              <div className="mt-16">
+                <QuoteCard quote={item.testimonialQuote} />
+                {item.testimonialAuthor ? (
+                  <p className="mt-4 text-center text-sm text-brand-muted">— {item.testimonialAuthor}</p>
+                ) : null}
+              </div>
+            ) : null}
+          </Reveal>
+
+          <Reveal delay={0.1} className="lg:sticky lg:top-28">
+            <div className="border-l-2 border-brand-gold/30 pl-6">
+              <p className="text-xs font-semibold uppercase tracking-wider text-brand-gold">At a Glance</p>
+              <dl className="mt-5 flex flex-col gap-5">
+                <div>
+                  <dt className="text-xs text-brand-muted">Client</dt>
+                  <dd className="mt-1 text-sm text-on-paper">{item.clientName}</dd>
+                </div>
+                {item.industryTag ? (
+                  <div>
+                    <dt className="text-xs text-brand-muted">Industry</dt>
+                    <dd className="mt-1 text-sm text-on-paper">{item.industryTag}</dd>
+                  </div>
+                ) : null}
+                {item.duration ? (
+                  <div>
+                    <dt className="text-xs text-brand-muted">Duration</dt>
+                    <dd className="mt-1 text-sm text-on-paper">{item.duration}</dd>
+                  </div>
+                ) : null}
+                {item.teamSize ? (
+                  <div>
+                    <dt className="text-xs text-brand-muted">Team Size</dt>
+                    <dd className="mt-1 text-sm text-on-paper">{item.teamSize}</dd>
+                  </div>
+                ) : null}
+              </dl>
             </div>
-          ) : null}
-          <div className="prose-cyfort" dangerouslySetInnerHTML={{ __html: renderMarkdown(item.body) }} />
-        </Reveal>
+          </Reveal>
+        </div>
       </Section>
 
       {related.length > 0 ? (
-        <Section variant="paper" className="px-6 py-20">
+        <Section variant="paper" className="px-6 py-24">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <Heading lead="More" emphasis="Case Studies" tone="paper" />
+              <Heading lead="More" emphasis="Case Studies" tone="dark" />
             </Reveal>
-            <StaggerGrid className="mt-10 grid gap-6 sm:grid-cols-2">
+            <StaggerGrid className="mt-12 grid gap-8 sm:grid-cols-2">
               {await Promise.all(
                 related.map(async (relatedItem) => (
                   <StaggerItem key={relatedItem.id}>

@@ -16,8 +16,6 @@ import { Eyebrow } from "@/components/site/eyebrow";
 import { Button } from "@/components/site/button";
 import { AppIcon } from "@/components/site/icons";
 import { DotGrid } from "@/components/site/decorative/dot-grid";
-import { ArcSweep } from "@/components/site/decorative/arc-sweep";
-import { DotTrail } from "@/components/site/decorative/dot-trail";
 import { Marquee } from "@/components/site/decorative/marquee";
 import { RadarChart } from "@/components/site/decorative/radar-chart";
 import { Reveal } from "@/components/site/motion/reveal";
@@ -164,15 +162,18 @@ export default async function HomePage() {
       {whoWeAreTeaser ? (
         <Section variant="paperAlt" className="px-6 py-24">
           <div className="mx-auto grid max-w-5xl items-center gap-12 sm:grid-cols-[1fr_1.4fr]">
-            <Reveal className="relative aspect-square overflow-hidden rounded-2xl bg-brand-dark">
-              <ArcSweep className="absolute inset-0 h-full w-full text-brand-gold" />
-              <DotTrail className="absolute inset-0 h-full w-full" />
-              <div className="absolute inset-0 flex items-end p-6">
-                <Heading as="h2" tier="section" tone="dark" lead="Who" emphasis="We Are" />
-              </div>
+            <Reveal className="relative aspect-square overflow-hidden rounded-2xl bg-black">
+              <Image
+                src="/images/brand/cyfort-logo-plate.png"
+                alt="CyFort Technologies Limited"
+                fill
+                sizes="(min-width: 640px) 40vw, 90vw"
+                className="object-contain p-10"
+              />
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="text-lg leading-relaxed text-on-paper">{whoWeAreTeaser}</p>
+              <Heading as="h2" tier="section" tone="dark" lead="Who" emphasis="We Are" />
+              <p className="mt-5 text-lg leading-relaxed text-on-paper">{whoWeAreTeaser}</p>
               <Link href="/about" className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-gold">
                 Read more about CyFort →
               </Link>
@@ -186,7 +187,7 @@ export default async function HomePage() {
         <Section variant="paper" className="px-6 py-24">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <Heading lead="What Makes" emphasis="CYFORT Different" tone="paper" />
+              <Heading lead="What Makes" emphasis="CYFORT Different" tone="dark" />
             </Reveal>
             <StaggerGrid className="mt-12 grid gap-5 sm:grid-cols-2">
               {differentiators.map((item, index) => (
@@ -195,7 +196,7 @@ export default async function HomePage() {
                     icon={DIFFERENTIATOR_ICONS[index % DIFFERENTIATOR_ICONS.length]}
                     title={item.title}
                     body={item.body}
-                    tone="paper"
+                    tone="dark"
                   />
                 </StaggerItem>
               ))}
@@ -209,7 +210,7 @@ export default async function HomePage() {
         <Section variant="paperAlt" className="px-6 py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <Heading lead="Our Service" emphasis="Portfolio" tone="paper" />
+              <Heading lead="Our Service" emphasis="Portfolio" tone="dark" />
             </Reveal>
             <StaggerGrid className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
@@ -227,7 +228,7 @@ export default async function HomePage() {
         <Section variant="paper" className="px-6 py-24">
           <div className="mx-auto max-w-5xl">
             <Reveal className="text-center">
-              <Heading lead="Industries" emphasis="We Serve" tone="paper" />
+              <Heading lead="Industries" emphasis="We Serve" tone="dark" />
             </Reveal>
             <StaggerGrid className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {industries.map((industry) => (
@@ -268,7 +269,7 @@ export default async function HomePage() {
             <Reveal>
               {about.closingEyebrow ? <Eyebrow className="text-center">{about.closingEyebrow}</Eyebrow> : null}
               {about.closingHeading ? (
-                <h2 className="mt-3 text-center text-3xl font-semibold text-on-paper sm:text-4xl">
+                <h2 className="mt-3 text-center font-display text-3xl font-semibold text-on-paper sm:text-4xl">
                   {about.closingHeading}
                 </h2>
               ) : null}

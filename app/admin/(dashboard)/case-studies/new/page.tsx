@@ -17,6 +17,16 @@ export default function NewCaseStudyPage() {
         <TextareaField label="Summary" name="summary" rows={3} required />
         <TextareaField label="Body (Markdown)" name="body" rows={12} required />
         <MediaPicker label="Cover Image" name="coverMediaId" />
+        <TextareaField
+          label="Results Summary"
+          name="resultsSummary"
+          rows={4}
+          hint="One metric/result per line, shown as a stat row."
+        />
+        <TextareaField label="Testimonial Quote" name="testimonialQuote" rows={3} />
+        <FormField label="Testimonial Author" name="testimonialAuthor" />
+        <FormField label="Duration" name="duration" placeholder="e.g. 8 weeks" />
+        <FormField label="Team Size" name="teamSize" placeholder="e.g. 3 consultants" />
         <ToggleField label="Published" name="published" />
         <div>
           <SubmitButton label="Create" pendingLabel="Creating…" />

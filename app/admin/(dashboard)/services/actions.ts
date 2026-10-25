@@ -16,6 +16,8 @@ function parse(formData: FormData) {
     slug: slugify(rawSlug || name),
     summary: formData.get("summary"),
     icon: formData.get("icon") || undefined,
+    approach: formData.get("approach") || undefined,
+    outcomes: formData.get("outcomes") || undefined,
     items: parseRepeatableField(formData, "items"),
   });
 }

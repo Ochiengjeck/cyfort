@@ -1,6 +1,7 @@
 import { FormField } from "@/components/admin/form-field";
 import { TextareaField } from "@/components/admin/textarea-field";
 import { ToggleField } from "@/components/admin/toggle-field";
+import { MediaPicker } from "@/components/admin/media-picker";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { createJobPostingAction } from "../actions";
 
@@ -17,7 +18,12 @@ export default function NewJobPostingPage() {
         </div>
         <FormField label="Employment Type" name="employmentType" placeholder="Full-time" />
         <TextareaField label="Summary" name="summary" rows={2} required />
-        <TextareaField label="Description (Markdown)" name="description" rows={10} required />
+        <TextareaField label="Description (Markdown)" name="description" rows={6} required hint="About the Role intro paragraph." />
+        <MediaPicker label="Cover Image" name="coverMediaId" />
+        <TextareaField label="Responsibilities" name="responsibilities" rows={5} hint="One per line." />
+        <TextareaField label="Requirements" name="requirements" rows={5} hint="One per line." />
+        <TextareaField label="Benefits" name="benefits" rows={4} hint="One per line." />
+        <FormField label="Salary Range" name="salaryRange" placeholder="e.g. Competitive, based on experience" />
         <FormField label="Apply Email" name="applyEmail" hint="Falls back to the site's contact email if blank." />
         <FormField label="Closes At" name="closesAt" type="date" />
         <ToggleField label="Published" name="published" />

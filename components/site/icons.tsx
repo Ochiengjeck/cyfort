@@ -28,6 +28,7 @@ import {
   BookOpenCheck,
   Sparkles,
   Atom,
+  Mail,
   type LucideIcon,
 } from "lucide-react";
 
@@ -67,6 +68,7 @@ export const ICONS: Record<string, LucideIcon> = {
   "book-open-check": BookOpenCheck,
   sparkles: Sparkles,
   atom: Atom,
+  mail: Mail,
 };
 
 export function resolveIcon(name: string | null | undefined, fallback: LucideIcon = Sparkles): LucideIcon {

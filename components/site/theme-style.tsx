@@ -24,9 +24,9 @@ export async function ThemeStyle() {
     "--color-brand-gold": safe(settings?.colorGold, "#C9A227"),
     "--color-brand-gold-dark": safe(settings?.colorGoldDark, "#9C7A3C"),
     "--color-brand-gold-light": safe(settings?.colorGoldLight, "#E8CE8F"),
-    "--color-brand-paper": safe(settings?.colorPaper, "#F2F3F5"),
-    "--color-brand-paper-alt": safe(settings?.colorPaperAlt, "#FFFFFF"),
-    "--color-brand-muted": safe(settings?.colorMuted, "#6B7280"),
+    "--color-brand-paper": safe(settings?.colorPaper, "#141414"),
+    "--color-brand-paper-alt": safe(settings?.colorPaperAlt, "#0A0A0B"),
+    "--color-brand-muted": safe(settings?.colorMuted, "#9CA3AF"),
   };
 
   const css = `:root{${Object.entries(vars)

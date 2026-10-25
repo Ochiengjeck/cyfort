@@ -50,10 +50,11 @@ export default async function InsightDetailPage({ params }: { params: Promise<{ 
         lead={rest.length > 0 ? lead : ""}
         emphasis={emphasis}
         description={post.authorName ? `By ${post.authorName}` : undefined}
-        image={{ src: "/images/generated/banner-advisory-tech.jpg", alt: "" }}
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: post.title }]}
+        image={{ src: "/images/generated/banners/insights.jpg", objectPosition: "center" }}
         meta={
           post.category || post.publishedAt ? (
-            <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {post.category ? (
                 <span className="rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-medium text-brand-gold">
                   {post.category}
@@ -72,24 +73,52 @@ export default async function InsightDetailPage({ params }: { params: Promise<{ 
         }
       />
 
-      <Section variant="paperAlt" className="px-6 py-20">
+      <Section variant="paperAlt" className="px-6 py-24">
         <Reveal className="mx-auto max-w-3xl">
           {coverUrl ? (
-            <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-xl">
+            <div className="relative mb-12 aspect-[16/9] w-full overflow-hidden rounded-xl">
               <Image src={coverUrl} alt={post.title} fill sizes="(min-width: 768px) 768px, 100vw" className="object-cover" />
             </div>
           ) : null}
+
+          {post.authorName || post.tags ? (
+            <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-l-2 border-brand-gold/30 pl-6">
+              {post.authorName ? (
+                <div>
+                  <p className="text-sm font-semibold text-on-paper">{post.authorName}</p>
+                  {post.authorRole ? <p className="mt-0.5 text-xs text-brand-muted">{post.authorRole}</p> : null}
+                </div>
+              ) : null}
+              {post.tags ? (
+                <div className="flex flex-wrap gap-2">
+                  {post.tags
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter(Boolean)
+                    .map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center rounded-full bg-brand-gold/10 px-2.5 py-1 text-[11px] font-medium text-brand-gold"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
           <div className="prose-cyfort" dangerouslySetInnerHTML={{ __html: renderMarkdown(post.body) }} />
         </Reveal>
       </Section>
 
       {related.length > 0 ? (
-        <Section variant="paper" className="px-6 py-20">
+        <Section variant="paper" className="px-6 py-24">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <Heading lead="More" emphasis="Insights" tone="paper" />
+              <Heading lead="More" emphasis="Insights" tone="dark" />
             </Reveal>
-            <StaggerGrid className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <StaggerGrid className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {await Promise.all(
                 related.map(async (relatedPost) => (
                   <StaggerItem key={relatedPost.id}>

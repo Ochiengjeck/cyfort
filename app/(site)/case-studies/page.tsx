@@ -6,6 +6,7 @@ import { Section } from "@/components/site/section";
 import { CaseStudyCard } from "@/components/site/case-study-card";
 import { EmptyState } from "@/components/site/empty-state";
 import { PageBanner } from "@/components/site/page-banner";
+import { Reveal } from "@/components/site/motion/reveal";
 import { StaggerGrid, StaggerItem } from "@/components/site/motion/stagger-grid";
 
 export const instant = false;
@@ -21,33 +22,56 @@ export default async function CaseStudiesPage() {
     orderBy: { publishedAt: "desc" },
   });
 
+  const [lead, ...rest] = caseStudies;
+
   return (
     <>
       <PageBanner
         lead="Engagements,"
         emphasis="outcomes"
-        image={{ src: "/images/generated/banner-advisory-tech.jpg", alt: "" }}
+        description="Real engagements, real results — a look at how we've helped organizations strengthen their technology and security posture."
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Case Studies" }]}
+        image={{ src: "/images/generated/banners/case-studies.jpg", objectPosition: "center 30%" }}
       />
 
-      <Section variant="paperAlt" className="px-6 py-20">
+      <Section variant="paperAlt" className="px-6 py-24">
         <div className="mx-auto max-w-5xl">
-          {caseStudies.length > 0 ? (
-            <StaggerGrid className="grid gap-6 sm:grid-cols-2">
-              {await Promise.all(
-                caseStudies.map(async (item) => (
-                  <StaggerItem key={item.id}>
-                    <CaseStudyCard
-                      slug={item.slug}
-                      title={item.title}
-                      clientName={item.clientName}
-                      industryTag={item.industryTag}
-                      summary={item.summary}
-                      coverUrl={await resolveMediaUrl(item.coverMediaId)}
-                    />
-                  </StaggerItem>
-                )),
-              )}
-            </StaggerGrid>
+          {lead ? (
+            <>
+              {/* Lead story — the most recent engagement, read as a single
+                  editorial feature rather than one tile among many. */}
+              <Reveal>
+                <CaseStudyCard
+                  slug={lead.slug}
+                  title={lead.title}
+                  clientName={lead.clientName}
+                  industryTag={lead.industryTag}
+                  summary={lead.summary}
+                  coverUrl={await resolveMediaUrl(lead.coverMediaId)}
+                  featured
+                />
+              </Reveal>
+
+              {rest.length > 0 ? (
+                <StaggerGrid className="mt-14 flex flex-col gap-6">
+                  {await Promise.all(
+                    rest.map(async (item, index) => (
+                      <StaggerItem key={item.id}>
+                        <CaseStudyCard
+                          slug={item.slug}
+                          title={item.title}
+                          clientName={item.clientName}
+                          industryTag={item.industryTag}
+                          summary={item.summary}
+                          coverUrl={await resolveMediaUrl(item.coverMediaId)}
+                          reverse={index % 2 === 1}
+                        />
+                      </StaggerItem>
+                    )),
+                  )}
+                </StaggerGrid>
+              ) : null}
+            </>
           ) : (
             <EmptyState
               heading="Client stories are on the way"

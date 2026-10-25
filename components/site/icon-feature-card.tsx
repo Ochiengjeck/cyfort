@@ -28,7 +28,7 @@ const TEXT_TONE: Record<IconFeatureCardTone, { title: string; body: string; icon
  * Icon-led feature card used for the Differentiators grid (Home + About).
  * Replaces the old numbered-text-only `PillBadge` pattern.
  */
-export function IconFeatureCard({ icon, title, body, tone = "paper" }: IconFeatureCardProps) {
+export function IconFeatureCard({ icon, title, body, tone = "dark" }: IconFeatureCardProps) {
   return (
     <Card tone={tone}>
       <span

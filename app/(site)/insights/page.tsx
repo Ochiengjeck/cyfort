@@ -6,6 +6,7 @@ import { Section } from "@/components/site/section";
 import { InsightCard } from "@/components/site/insight-card";
 import { EmptyState } from "@/components/site/empty-state";
 import { PageBanner } from "@/components/site/page-banner";
+import { Reveal } from "@/components/site/motion/reveal";
 import { StaggerGrid, StaggerItem } from "@/components/site/motion/stagger-grid";
 
 export const instant = false;
@@ -21,33 +22,56 @@ export default async function InsightsPage() {
     orderBy: { publishedAt: "desc" },
   });
 
+  const [lead, ...rest] = posts;
+
   return (
     <>
       <PageBanner
         lead="Perspectives on"
         emphasis="technology & risk"
-        image={{ src: "/images/generated/banner-advisory-tech.jpg", alt: "" }}
+        description="Practical perspectives on cybersecurity, technology strategy, and governance from the consultants who live it."
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Insights" }]}
+        image={{ src: "/images/generated/banners/insights.jpg", objectPosition: "center" }}
       />
 
-      <Section variant="paperAlt" className="px-6 py-20">
+      <Section variant="paperAlt" className="px-6 py-24">
         <div className="mx-auto max-w-5xl">
-          {posts.length > 0 ? (
-            <StaggerGrid className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {await Promise.all(
-                posts.map(async (post) => (
-                  <StaggerItem key={post.id}>
-                    <InsightCard
-                      slug={post.slug}
-                      title={post.title}
-                      excerpt={post.excerpt}
-                      category={post.category}
-                      publishedAt={post.publishedAt}
-                      coverUrl={await resolveMediaUrl(post.coverMediaId)}
-                    />
-                  </StaggerItem>
-                )),
-              )}
-            </StaggerGrid>
+          {lead ? (
+            <>
+              {/* Lead story — the most recent article, read as a single
+                  editorial feature rather than one tile among many. */}
+              <Reveal>
+                <InsightCard
+                  slug={lead.slug}
+                  title={lead.title}
+                  excerpt={lead.excerpt}
+                  category={lead.category}
+                  publishedAt={lead.publishedAt}
+                  coverUrl={await resolveMediaUrl(lead.coverMediaId)}
+                  featured
+                />
+              </Reveal>
+
+              {rest.length > 0 ? (
+                <StaggerGrid className="mt-14 flex flex-col gap-6">
+                  {await Promise.all(
+                    rest.map(async (post, index) => (
+                      <StaggerItem key={post.id}>
+                        <InsightCard
+                          slug={post.slug}
+                          title={post.title}
+                          excerpt={post.excerpt}
+                          category={post.category}
+                          publishedAt={post.publishedAt}
+                          coverUrl={await resolveMediaUrl(post.coverMediaId)}
+                          reverse={index % 2 === 1}
+                        />
+                      </StaggerItem>
+                    )),
+                  )}
+                </StaggerGrid>
+              ) : null}
+            </>
           ) : (
             <EmptyState
               heading="Insights are on the way"

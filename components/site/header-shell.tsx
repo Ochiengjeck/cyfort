@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { MobileNav } from "./mobile-nav";
 import { Button } from "./button";
+import { isActiveLink } from "@/lib/nav";
 
 type NavLinkItem = { id: string; label: string; href: string; openInNewTab: boolean };
 
@@ -24,6 +26,7 @@ const SCROLL_THRESHOLD = 24;
  */
 export function HeaderShell({ siteName, navLinks }: HeaderShellProps) {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     function onScroll() {
@@ -56,18 +59,24 @@ export function HeaderShell({ siteName, navLinks }: HeaderShellProps) {
 
         <nav className="hidden md:block">
           <ul className="flex items-center gap-8">
-            {navLinks.map((link) => (
-              <li key={link.id}>
-                <Link
-                  href={link.href}
-                  target={link.openInNewTab ? "_blank" : undefined}
-                  rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-                  className="relative inline-block py-1 text-sm text-on-dark/70 transition-colors duration-300 hover:text-on-dark after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-brand-gold after:transition-transform after:duration-300 hover:after:scale-x-100"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {navLinks.map((link) => {
+              const active = isActiveLink(pathname, link.href);
+              return (
+                <li key={link.id}>
+                  <Link
+                    href={link.href}
+                    target={link.openInNewTab ? "_blank" : undefined}
+                    rel={link.openInNewTab ? "noopener noreferrer" : undefined}
+                    aria-current={active ? "page" : undefined}
+                    className={`relative inline-block py-1 text-sm transition-colors duration-300 after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:bg-brand-gold after:transition-transform after:duration-300 hover:text-on-dark hover:after:scale-x-100 ${
+                      active ? "text-on-dark after:scale-x-100" : "text-on-dark/70 after:scale-x-0"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 

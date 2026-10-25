@@ -3,12 +3,13 @@
 import { useActionState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/site/button";
 import { submitContactAction, type ContactFormState } from "./actions";
 
 const initialState: ContactFormState = { error: null, success: false };
 
 const inputClass =
-  "rounded-md border border-black/10 bg-brand-paper-alt px-3.5 py-2.5 text-sm text-on-paper outline-none transition-colors focus:border-brand-gold focus-visible:ring-2 focus-visible:ring-brand-gold/40";
+  "rounded-md border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-on-paper outline-none transition-colors focus:border-brand-gold focus-visible:ring-2 focus-visible:ring-brand-gold/40";
 
 export function ContactForm() {
   const [state, formAction, isPending] = useActionState(submitContactAction, initialState);
@@ -21,7 +22,7 @@ export function ContactForm() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="rounded-xl border border-black/10 bg-brand-paper p-8 text-center"
+          className="rounded-xl border border-white/10 bg-white/[0.03] p-8 text-center"
         >
           <CheckCircle2 className="mx-auto h-10 w-10 text-brand-gold" aria-hidden="true" />
           <p className="mt-4 text-lg font-semibold text-on-paper">Thank you — we&apos;ve received your message.</p>
@@ -77,16 +78,12 @@ export function ContactForm() {
             <textarea id="message" name="message" rows={5} required className={inputClass} />
           </div>
 
-          {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
+          {state.error ? <p className="text-sm text-red-400">{state.error}</p> : null}
 
-          <button
-            type="submit"
-            disabled={isPending}
-            className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-brand-dark px-6 py-3 text-sm font-medium text-on-dark transition-opacity hover:opacity-90 disabled:opacity-60"
-          >
+          <Button type="submit" disabled={isPending} variant="primary" className="mt-2 w-fit disabled:opacity-60">
             {isPending ? "Sending…" : "Send Message"}
             {!isPending ? <Send className="h-4 w-4" aria-hidden="true" /> : null}
-          </button>
+          </Button>
         </motion.form>
       )}
     </AnimatePresence>

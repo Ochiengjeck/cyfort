@@ -1,50 +1,86 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { Section } from "./section";
 import { Heading } from "./heading";
-import { DotGrid } from "./decorative/dot-grid";
-import { MeshBlob } from "./decorative/mesh-blob";
+import { Button } from "./button";
 import { Reveal } from "./motion/reveal";
+
+type Crumb = { label: string; href?: string };
+
+type PageBannerImage = { src: string; objectPosition?: string };
 
 type PageBannerProps = {
   lead: string;
   emphasis: string;
   description?: string;
   meta?: React.ReactNode;
-  image?: { src: string; alt: string };
+  breadcrumb: Crumb[];
+  cta?: { label: string; href: string };
+  image?: PageBannerImage;
+};
+
+const DEFAULT_IMAGE: PageBannerImage = {
+  src: "/images/generated/banner-shield.jpg",
+  objectPosition: "75% center",
 };
 
 /**
- * Shared banner block for every inner route — a gold accent rule and a
- * big heading, optionally backed by a generated photo, always layered
- * with a drifting mesh-gradient blob + dot texture for depth even when
- * there's no photo (e.g. Contact).
+ * Shared banner for every inner route (never the home page). Each page
+ * passes its own background photo via `image`; pages that don't (currently
+ * just Terms/Privacy) fall back to the original shared illustration.
  */
-export function PageBanner({ lead, emphasis, description, meta, image }: PageBannerProps) {
+export function PageBanner({ lead, emphasis, description, meta, breadcrumb, cta, image = DEFAULT_IMAGE }: PageBannerProps) {
   return (
     <Section
       variant="dark"
-      className="relative flex min-h-[48vh] flex-col items-center justify-center px-6 pb-20 pt-32 sm:pb-24 sm:pt-36"
+      className="relative flex min-h-[48vh] flex-col justify-center overflow-hidden px-6 pb-16 pt-32 sm:min-h-[54vh] sm:pb-20 sm:pt-36"
     >
-      {image ? (
-        <>
-          <Image src={image.src} alt={image.alt} fill sizes="100vw" className="object-cover opacity-35" priority={false} />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/85 via-brand-dark/80 to-brand-dark" />
-        </>
-      ) : (
-        <DotGrid className="absolute inset-0 opacity-[0.08]" />
-      )}
-      <MeshBlob tone="gold" className="absolute inset-0" />
+      <Image
+        src={image.src}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+        style={{ objectPosition: image.objectPosition ?? "center" }}
+      />
+      {/* A uniform wash plus a left-to-right gradient — unlike the original
+          single curated photo, per-page photography isn't guaranteed to be
+          dark on the left, so the wash carries the legibility guarantee on
+          its own rather than leaning on the source image. */}
+      <div className="absolute inset-0 bg-brand-dark/45" />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/75 to-brand-dark/25" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-brand-dark to-transparent" />
 
-      <div className="relative mx-auto flex max-w-3xl flex-col items-center text-center">
-        <Reveal className="flex flex-col items-center">
-          {meta}
-          <span
-            aria-hidden="true"
-            className="mb-5 block h-[3px] w-12 rounded-full bg-gradient-to-r from-brand-gold-dark via-brand-gold to-brand-gold-light"
-          />
-          <Heading as="h1" tier="banner" tone="dark" lead={lead} emphasis={emphasis} />
-          {description ? (
-            <p className="mx-auto mt-5 max-w-xl text-base text-on-dark/70">{description}</p>
+      <div className="relative mx-auto w-full max-w-6xl">
+        <Reveal>
+          <nav aria-label="Breadcrumb">
+            <ol className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs text-on-dark/60 backdrop-blur-sm">
+              {breadcrumb.map((crumb, index) => (
+                <li key={crumb.label} className="inline-flex items-center gap-1.5">
+                  {index > 0 ? <ChevronRight className="h-3 w-3 text-on-dark/30" aria-hidden="true" /> : null}
+                  {crumb.href ? (
+                    <Link href={crumb.href} className="transition-colors hover:text-brand-gold">
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <span className="text-on-dark/80">{crumb.label}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          {meta ? <div className="mt-5 flex flex-wrap items-center gap-2">{meta}</div> : null}
+
+          <Heading as="h1" tier="banner" tone="dark" lead={lead} emphasis={emphasis} className="mt-5" />
+          {description ? <p className="mt-5 max-w-xl text-base text-on-dark/70">{description}</p> : null}
+
+          {cta ? (
+            <div className="mt-8">
+              <Button href={cta.href}>{cta.label}</Button>
+            </div>
           ) : null}
         </Reveal>
       </div>

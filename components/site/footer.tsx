@@ -1,9 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { connection } from "next/server";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail, Phone, MapPin, Building2, Boxes, Compass } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { DotGrid } from "./decorative/dot-grid";
+import { MeshBlob } from "./decorative/mesh-blob";
+import { ArcSweep } from "./decorative/arc-sweep";
+import { NewsletterForm } from "./newsletter-form";
 
 // lucide-react dropped brand/social-logo icons entirely (trademark policy) —
 // these stay as hand-coded inline SVGs, same as before the redesign.
@@ -25,15 +28,33 @@ const SOCIAL_ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
+// "Navigate" is split into two themed columns instead of one flat list —
+// grouped by href against the shared NavLink set rather than a new schema
+// field, since the full set of routes is fixed and well known.
+const COMPANY_HREFS = ["/about", "/team", "/careers", "/contact"];
+const RESOURCE_HREFS = ["/industries", "/case-studies", "/insights"];
+
+function ColumnHeading({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand-gold/10 text-brand-gold">
+        {icon}
+      </span>
+      <p className="text-xs font-semibold uppercase tracking-wide text-on-dark/50">{children}</p>
+    </div>
+  );
+}
+
 export async function Footer() {
   // The copyright year is a non-deterministic value (`new Date()`), which
   // Cache Components disallows during prerendering unless rendering is
   // explicitly tied to a real request first.
   await connection();
 
-  const [settings, navLinks] = await Promise.all([
+  const [settings, navLinks, services] = await Promise.all([
     prisma.siteSettings.findFirst(),
     prisma.navLink.findMany({ orderBy: { order: "asc" } }),
+    prisma.service.findMany({ orderBy: { order: "asc" } }),
   ]);
 
   const year = new Date().getFullYear();
@@ -44,19 +65,72 @@ export async function Footer() {
     settings?.facebookUrl ? { href: settings.facebookUrl, label: "Facebook" } : null,
   ].filter((item): item is { href: string; label: string } => item !== null);
 
+  const companyLinks = navLinks.filter((link) => COMPANY_HREFS.includes(link.href));
+  const resourceLinks = navLinks.filter((link) => RESOURCE_HREFS.includes(link.href));
+
   return (
-    <footer className="relative border-t border-white/5 bg-brand-dark text-on-dark before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-brand-gold/60 before:to-transparent">
-      <DotGrid className="pointer-events-none absolute inset-0 opacity-[0.05]" />
-      <div className="relative mx-auto max-w-6xl px-6 py-14">
-        <div className="grid gap-10 sm:grid-cols-3">
+    <footer className="relative overflow-hidden border-t border-white/5 bg-brand-dark text-on-dark before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-brand-gold/60 before:to-transparent">
+      <DotGrid className="pointer-events-none absolute inset-0 opacity-[0.08]" />
+      <ArcSweep className="pointer-events-none absolute -left-32 -top-24 hidden h-[26rem] w-[26rem] rotate-180 opacity-20 lg:block" />
+
+      <div className="relative mx-auto max-w-6xl px-6 pt-14">
+        {/* Newsletter — a glass callout card, same recipe as the site's CTA
+            boxes (Careers/Services detail), so the footer picks up the
+            same visual language instead of a bare strip of text. */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-8 shadow-[0_24px_60px_-32px_rgba(0,0,0,0.6)] sm:p-10">
+          <MeshBlob tone="gold" className="absolute inset-0 opacity-70" />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-brand-gold/30 bg-brand-gold/10 text-brand-gold sm:flex">
+                <Mail className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div className="max-w-md">
+                <p className="text-lg font-semibold text-on-dark">Stay ahead of the threat landscape</p>
+                <p className="mt-1 text-sm text-on-dark/60">
+                  Occasional insights on cybersecurity, governance, and technology strategy across Africa — no spam.
+                </p>
+              </div>
+            </div>
+            <div className="w-full lg:w-auto lg:min-w-[22rem]">
+              <NewsletterForm />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Image
               src="/images/brand/cyfort-logo-full.png"
               alt={settings?.siteName ?? "CyFort Technologies Limited"}
               width={2035}
               height={779}
-              className="h-16 w-auto"
+              className="h-14 w-auto"
             />
+            <p className="mt-4 max-w-xs text-sm text-on-dark/60">
+              {settings?.tagline ?? "Securing Digital Growth Across Africa"}
+            </p>
+            <ul className="mt-5 flex flex-col gap-2 text-sm text-on-dark/70">
+              {settings?.contactEmail ? (
+                <li className="flex items-center gap-2">
+                  <Mail className="h-3.5 w-3.5 shrink-0 text-on-dark/40" aria-hidden="true" />
+                  <a href={`mailto:${settings.contactEmail}`} className="hover:text-brand-gold">
+                    {settings.contactEmail}
+                  </a>
+                </li>
+              ) : null}
+              {settings?.contactPhone ? (
+                <li className="flex items-center gap-2">
+                  <Phone className="h-3.5 w-3.5 shrink-0 text-on-dark/40" aria-hidden="true" />
+                  {settings.contactPhone}
+                </li>
+              ) : null}
+              {settings?.contactAddress ? (
+                <li className="flex items-center gap-2">
+                  <MapPin className="h-3.5 w-3.5 shrink-0 text-on-dark/40" aria-hidden="true" />
+                  {settings.contactAddress}
+                </li>
+              ) : null}
+            </ul>
             {socials.length > 0 ? (
               <div className="mt-5 flex items-center gap-3">
                 {socials.map((social) => (
@@ -75,47 +149,79 @@ export async function Footer() {
             ) : null}
           </div>
 
-          <div>
-            <p className="text-xs font-semibold tracking-wide text-on-dark/40">Navigate</p>
-            <ul className="mt-3 flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <li key={link.id}>
-                  <Link href={link.href} className="text-sm text-on-dark/70 transition-colors hover:text-brand-gold">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {companyLinks.length > 0 ? (
+            <div>
+              <ColumnHeading icon={<Building2 className="h-3.5 w-3.5" aria-hidden="true" />}>
+                Company
+              </ColumnHeading>
+              <ul className="mt-4 flex flex-col gap-2">
+                {companyLinks.map((link) => (
+                  <li key={link.id}>
+                    <Link href={link.href} className="text-sm text-on-dark/70 transition-colors hover:text-brand-gold">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
-          <div>
-            <p className="text-xs font-semibold tracking-wide text-on-dark/40">Contact</p>
-            <ul className="mt-3 flex flex-col gap-2 text-sm text-on-dark/70">
-              {settings?.contactEmail ? (
-                <li>
-                  <a href={`mailto:${settings.contactEmail}`} className="hover:text-brand-gold">
-                    {settings.contactEmail}
-                  </a>
-                </li>
-              ) : null}
-              {settings?.contactPhone ? <li>{settings.contactPhone}</li> : null}
-              {settings?.contactAddress ? <li>{settings.contactAddress}</li> : null}
-            </ul>
-            <Link
-              href="/contact"
-              className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-brand-gold transition-colors hover:text-brand-gold-light"
-            >
-              Talk to us
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          </div>
+          {services.length > 0 ? (
+            <div>
+              <ColumnHeading icon={<Boxes className="h-3.5 w-3.5" aria-hidden="true" />}>Services</ColumnHeading>
+              <ul className="mt-4 flex flex-col gap-2">
+                {services.map((service) => (
+                  <li key={service.id}>
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className="text-sm text-on-dark/70 transition-colors hover:text-brand-gold"
+                    >
+                      {service.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {resourceLinks.length > 0 ? (
+            <div>
+              <ColumnHeading icon={<Compass className="h-3.5 w-3.5" aria-hidden="true" />}>
+                Resources
+              </ColumnHeading>
+              <ul className="mt-4 flex flex-col gap-2">
+                {resourceLinks.map((link) => (
+                  <li key={link.id}>
+                    <Link href={link.href} className="text-sm text-on-dark/70 transition-colors hover:text-brand-gold">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact"
+                className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-brand-gold transition-colors hover:text-brand-gold-light"
+              >
+                Talk to us
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+          ) : null}
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/5 pt-6 text-xs text-on-dark/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative mt-12 flex flex-col gap-3 border-t border-white/5 py-6 text-xs text-on-dark/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {settings?.siteName ?? "CyFort Technologies Limited"}. All rights reserved.
           </p>
-          {settings?.footerText ? <p>{settings.footerText}</p> : null}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {settings?.footerText ? <p>{settings.footerText}</p> : null}
+            <Link href="/terms" className="transition-colors hover:text-brand-gold">
+              Terms of Service
+            </Link>
+            <Link href="/privacy" className="transition-colors hover:text-brand-gold">
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -18,6 +18,11 @@ function parse(formData: FormData) {
     summary: formData.get("summary"),
     body: formData.get("body"),
     coverMediaId: formData.get("coverMediaId") || undefined,
+    resultsSummary: formData.get("resultsSummary") || undefined,
+    testimonialQuote: formData.get("testimonialQuote") || undefined,
+    testimonialAuthor: formData.get("testimonialAuthor") || undefined,
+    duration: formData.get("duration") || undefined,
+    teamSize: formData.get("teamSize") || undefined,
     published: formData.get("published") === "on",
   });
 }

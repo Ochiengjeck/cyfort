@@ -25,17 +25,23 @@ export default async function ContactPage() {
 
   return (
     <>
-      <PageBanner lead="Let's talk about" emphasis="your next move" />
+      <PageBanner
+        lead="Let's talk about"
+        emphasis="your next move"
+        description="Tell us about your technology or cybersecurity challenge — we'll help you figure out the right next step."
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Contact" }]}
+        image={{ src: "/images/generated/banners/contact.jpg", objectPosition: "center 20%" }}
+      />
 
       <Section variant="paperAlt" className="px-6 py-20">
         <div className="mx-auto grid max-w-5xl gap-12 sm:grid-cols-[1fr_1.4fr]">
           <Reveal className="flex flex-col gap-4">
-            <h2 className="text-sm font-semibold text-brand-gold-dark">Contact details</h2>
+            <h2 className="text-sm font-semibold text-brand-gold">Contact details</h2>
             {details.map((detail) => {
               const Icon = detail.icon;
               const content = (
                 <>
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold-dark">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <div>
@@ -48,12 +54,12 @@ export default async function ContactPage() {
                 <a
                   key={detail.label}
                   href={detail.href}
-                  className="flex items-center gap-3 rounded-xl border border-black/8 bg-brand-paper-alt p-4 transition-colors hover:border-brand-gold/40"
+                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:border-brand-gold/40"
                 >
                   {content}
                 </a>
               ) : (
-                <div key={detail.label} className="flex items-center gap-3 rounded-xl border border-black/8 bg-brand-paper-alt p-4">
+                <div key={detail.label} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
                   {content}
                 </div>
               );

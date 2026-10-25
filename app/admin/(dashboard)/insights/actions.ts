@@ -17,7 +17,9 @@ function parse(formData: FormData) {
     body: formData.get("body"),
     coverMediaId: formData.get("coverMediaId") || undefined,
     authorName: formData.get("authorName") || undefined,
+    authorRole: formData.get("authorRole") || undefined,
     category: formData.get("category") || undefined,
+    tags: formData.get("tags") || undefined,
     published: formData.get("published") === "on",
   });
 }

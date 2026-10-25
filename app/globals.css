@@ -8,16 +8,19 @@
   --color-brand-gold: #c9a227;
   --color-brand-gold-dark: #9c7a3c;
   --color-brand-gold-light: #e8ce8f;
-  --color-brand-paper: #f2f3f5;
-  --color-brand-paper-alt: #ffffff;
-  --color-brand-muted: #6b7280;
+  /* Dark theme sitewide — paper/paper-alt reuse the existing ink/dark
+     values so Section's "light" variants render as two complementary dark
+     tones instead of introducing new hex values. */
+  --color-brand-paper: #141414;
+  --color-brand-paper-alt: #0a0a0b;
+  --color-brand-muted: #9ca3af;
 
   /* Fixed foreground pairings — NOT admin-editable. Keeps every
      background/foreground combination legible regardless of which brand
      colors an admin chooses. */
   --color-on-dark: #ffffff;
   --color-on-gold: var(--color-brand-dark);
-  --color-on-paper: var(--color-brand-ink);
+  --color-on-paper: var(--color-on-dark);
   --color-muted-on-dark: rgba(255, 255, 255, 0.65);
 }
 
@@ -36,6 +39,7 @@
   --color-muted-on-dark: var(--color-muted-on-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
 }
 
 body {

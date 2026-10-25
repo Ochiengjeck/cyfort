@@ -34,10 +34,14 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { label: "Case Studies", href: "/admin/case-studies" },
       { label: "Insights", href: "/admin/insights" },
       { label: "Careers", href: "/admin/careers" },
+      { label: "Legal Pages", href: "/admin/legal" },
     ],
   },
   {
     label: "Inbox",
-    items: [{ label: "Messages", href: "/admin/messages" }],
+    items: [
+      { label: "Messages", href: "/admin/messages" },
+      { label: "Newsletter", href: "/admin/newsletter" },
+    ],
   },
 ];

@@ -1,16 +1,20 @@
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-// SQLite now (local file, via the better-sqlite3 driver adapter required by
-// Prisma 7+). Moving to Postgres later means swapping this adapter for
-// @prisma/adapter-pg and updating `datasource.provider` in schema.prisma —
-// the rest of the data layer (models, queries) is unaffected.
+const connectionString =
+  process.env.DATABASE_URL ?? process.env.PRISMA_DATABASE_URL ?? process.env.POSTGRES_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL (or PRISMA_DATABASE_URL / POSTGRES_URL) is not set.");
+}
+
+// Prisma Postgres, via the pg driver adapter required by Prisma 7+.
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    adapter: new PrismaBetterSqlite3({ url: process.env.DATABASE_URL! }),
+    adapter: new PrismaPg({ connectionString }),
   });
 
 if (process.env.NODE_ENV !== "production") {

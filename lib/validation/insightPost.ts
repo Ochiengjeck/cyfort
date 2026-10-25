@@ -7,6 +7,8 @@ export const insightPostSchema = z.object({
   body: z.string().min(1),
   coverMediaId: z.string().optional(),
   authorName: z.string().optional(),
+  authorRole: z.string().optional(),
   category: z.string().optional(),
+  tags: z.string().optional(),
   published: z.boolean().default(false),
 });

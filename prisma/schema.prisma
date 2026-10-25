@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model AdminUser {
@@ -16,16 +16,16 @@ model AdminUser {
 }
 
 model SiteSettings {
-  id              String   @id @default(cuid())
-  siteName        String   @default("CyFort Technologies Limited")
-  shortName       String   @default("CYFORT")
-  tagline         String   @default("Securing Digital Growth Across Africa")
-  categoryLine    String   @default("TECHNOLOGY · ADVISORY · CYBERSECURITY")
+  id              String  @id @default(cuid())
+  siteName        String  @default("CyFort Technologies Limited")
+  shortName       String  @default("CYFORT")
+  tagline         String  @default("Securing Digital Growth Across Africa")
+  categoryLine    String  @default("TECHNOLOGY · ADVISORY · CYBERSECURITY")
   metaDescription String?
   logoMediaId     String?
   faviconMediaId  String?
-  contactEmail    String   @default("info@cyfort.africa")
-  contactPhone    String   @default("+254 7__ ___ ___")
+  contactEmail    String  @default("info@cyfort.africa")
+  contactPhone    String  @default("+254 7__ ___ ___")
   contactAddress  String?
   linkedinUrl     String?
   twitterUrl      String?
@@ -37,9 +37,9 @@ model SiteSettings {
   colorGold      String @default("#C9A227")
   colorGoldDark  String @default("#9C7A3C")
   colorGoldLight String @default("#E8CE8F")
-  colorPaper     String @default("#F2F3F5")
-  colorPaperAlt  String @default("#FFFFFF")
-  colorMuted     String @default("#6B7280")
+  colorPaper     String @default("#141414")
+  colorPaperAlt  String @default("#0A0A0B")
+  colorMuted     String @default("#9CA3AF")
 
   updatedAt DateTime @updatedAt
 }
@@ -101,6 +101,8 @@ model Service {
   name      String
   summary   String
   icon      String?
+  approach  String?
+  outcomes  String?
   items     ServiceItem[]
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
@@ -116,12 +118,14 @@ model ServiceItem {
 }
 
 model Industry {
-  id        String   @id @default(cuid())
-  order     Int      @default(0)
-  name      String
-  blurb     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  order        Int      @default(0)
+  name         String
+  blurb        String?
+  icon         String?
+  imageMediaId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model PromiseItem {
@@ -134,33 +138,41 @@ model PromiseItem {
 }
 
 model TeamMember {
-  id           String   @id @default(cuid())
-  order        Int      @default(0)
+  id           String       @id @default(cuid())
+  order        Int          @default(0)
   name         String
   role         String
   bio          String?
   photoMediaId String?
   linkedinUrl  String?
   email        String?
-  published    Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  reportsToId  String?
+  reportsTo    TeamMember?  @relation("TeamHierarchy", fields: [reportsToId], references: [id], onDelete: SetNull)
+  reports      TeamMember[] @relation("TeamHierarchy")
+  published    Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model CaseStudy {
-  id           String    @id @default(cuid())
-  slug         String    @unique
-  title        String
-  clientName   String
-  industryTag  String?
-  summary      String
-  body         String
-  coverMediaId String?
-  published    Boolean   @default(false)
-  publishedAt  DateTime?
-  order        Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  slug              String    @unique
+  title             String
+  clientName        String
+  industryTag       String?
+  summary           String
+  body              String
+  coverMediaId      String?
+  resultsSummary    String?
+  testimonialQuote  String?
+  testimonialAuthor String?
+  duration          String?
+  teamSize          String?
+  published         Boolean   @default(false)
+  publishedAt       DateTime?
+  order             Int       @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model InsightPost {
@@ -171,7 +183,9 @@ model InsightPost {
   body         String
   coverMediaId String?
   authorName   String?
+  authorRole   String?
   category     String?
+  tags         String?
   published    Boolean   @default(false)
   publishedAt  DateTime?
   createdAt    DateTime  @default(now())
@@ -179,19 +193,24 @@ model InsightPost {
 }
 
 model JobPosting {
-  id             String    @id @default(cuid())
-  slug           String    @unique
-  title          String
-  department     String?
-  location       String?
-  employmentType String?
-  summary        String
-  description    String
-  applyEmail     String?
-  published      Boolean   @default(false)
-  closesAt       DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  slug             String    @unique
+  title            String
+  department       String?
+  location         String?
+  employmentType   String?
+  summary          String
+  description      String
+  coverMediaId     String?
+  responsibilities String?
+  requirements     String?
+  benefits         String?
+  salaryRange      String?
+  applyEmail       String?
+  published        Boolean   @default(false)
+  closesAt         DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model ContactSubmission {
@@ -215,5 +234,19 @@ model Media {
   alt       String?
   mimeType  String
   size      Int
+  createdAt DateTime @default(now())
+}
+
+model LegalPage {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  body      String
+  updatedAt DateTime @updatedAt
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
   createdAt DateTime @default(now())
 }

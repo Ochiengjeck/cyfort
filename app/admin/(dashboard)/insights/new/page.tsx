@@ -16,7 +16,9 @@ export default function NewInsightPostPage() {
         <TextareaField label="Body (Markdown)" name="body" rows={12} required />
         <MediaPicker label="Cover Image" name="coverMediaId" />
         <FormField label="Author Name" name="authorName" />
+        <FormField label="Author Role" name="authorRole" />
         <FormField label="Category" name="category" />
+        <FormField label="Tags" name="tags" hint="Comma-separated, e.g. Cybersecurity, Risk Management." />
         <ToggleField label="Published" name="published" />
         <div>
           <SubmitButton label="Create" pendingLabel="Creating…" />

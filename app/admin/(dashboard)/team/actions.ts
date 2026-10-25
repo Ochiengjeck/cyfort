@@ -13,6 +13,7 @@ function parse(formData: FormData) {
     photoMediaId: formData.get("photoMediaId") || undefined,
     linkedinUrl: formData.get("linkedinUrl") || undefined,
     email: formData.get("email") || undefined,
+    reportsToId: formData.get("reportsToId") || undefined,
     published: formData.get("published") === "on",
   });
 }
@@ -32,6 +33,9 @@ export async function createTeamMemberAction(formData: FormData) {
 
 export async function updateTeamMemberAction(id: string, formData: FormData) {
   const data = parse(formData);
+  if (data.reportsToId === id) {
+    data.reportsToId = undefined;
+  }
   await prisma.teamMember.update({ where: { id }, data });
   refresh();
   redirect("/admin/team");

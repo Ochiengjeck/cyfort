@@ -5,6 +5,7 @@ import { FormField } from "@/components/admin/form-field";
 import { TextareaField } from "@/components/admin/textarea-field";
 import { ToggleField } from "@/components/admin/toggle-field";
 import { MediaPicker } from "@/components/admin/media-picker";
+import { SelectField } from "@/components/admin/select-field";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { updateTeamMemberAction } from "../../actions";
 
@@ -13,7 +14,10 @@ export const instant = false;
 export default async function EditTeamMemberPage({ params }: { params: Promise<{ id: string }> }) {
   await connection();
   const { id } = await params;
-  const member = await prisma.teamMember.findUnique({ where: { id } });
+  const [member, members] = await Promise.all([
+    prisma.teamMember.findUnique({ where: { id } }),
+    prisma.teamMember.findMany({ orderBy: { order: "asc" } }),
+  ]);
   if (!member) notFound();
 
   const action = updateTeamMemberAction.bind(null, id);
@@ -28,6 +32,16 @@ export default async function EditTeamMemberPage({ params }: { params: Promise<{
         <MediaPicker label="Photo" name="photoMediaId" defaultValue={member.photoMediaId} />
         <FormField label="LinkedIn URL" name="linkedinUrl" defaultValue={member.linkedinUrl} />
         <FormField label="Email" name="email" type="email" defaultValue={member.email} />
+        <SelectField
+          label="Reports To"
+          name="reportsToId"
+          defaultValue={member.reportsToId}
+          options={members
+            .filter((candidate) => candidate.id !== id)
+            .map((candidate) => ({ value: candidate.id, label: `${candidate.name} — ${candidate.role}` }))}
+          placeholder="— No one (top of the org chart) —"
+          hint="Drives the hierarchy tree on the public Team page."
+        />
         <ToggleField label="Published" name="published" defaultChecked={member.published} />
         <div>
           <SubmitButton />

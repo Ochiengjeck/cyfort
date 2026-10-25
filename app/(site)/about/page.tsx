@@ -37,7 +37,9 @@ export default async function AboutPage() {
         lead="Who"
         emphasis="We Are"
         description="A technology advisory and cybersecurity consulting firm partnering with organizations to build secure, resilient, and future-ready digital environments."
-        image={{ src: "/images/generated/banner-advisory-tech.jpg", alt: "" }}
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "About" }]}
+        cta={{ label: "Talk to Us", href: "/contact" }}
+        image={{ src: "/images/generated/banners/about.jpg", objectPosition: "center 35%" }}
       />
 
       <Section variant="paperAlt" className="px-6 py-20">
@@ -48,7 +50,7 @@ export default async function AboutPage() {
             </p>
           ))}
 
-          <blockquote className="mt-10 border-l-2 border-brand-gold pl-5 text-lg font-medium italic text-on-paper">
+          <blockquote className="mt-10 border-l-2 border-brand-gold pl-5 font-display text-lg font-medium italic text-on-paper">
             “{about.pullQuote}”
           </blockquote>
         </Reveal>
@@ -58,19 +60,19 @@ export default async function AboutPage() {
         <StaggerGrid className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2">
           <StaggerItem>
             <Card className="h-full">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold-dark">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold">
                 <AppIcon name="compass" className="h-5 w-5" />
               </span>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-brand-gold-dark">Our Vision</p>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-brand-gold">Our Vision</p>
               <p className="mt-2 text-base leading-relaxed text-on-paper">{about.vision}</p>
             </Card>
           </StaggerItem>
           <StaggerItem>
             <Card className="h-full">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold-dark">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold">
                 <AppIcon name="target" className="h-5 w-5" />
               </span>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-brand-gold-dark">Our Mission</p>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-brand-gold">Our Mission</p>
               <p className="mt-2 text-base leading-relaxed text-on-paper">{about.mission}</p>
             </Card>
           </StaggerItem>
@@ -81,17 +83,17 @@ export default async function AboutPage() {
         <MeshBlob tone="gold" className="absolute inset-0 opacity-60" />
         <div className="relative mx-auto max-w-5xl">
           <Reveal>
-            <Heading lead="What We" emphasis="Believe" tone="paper" />
+            <Heading lead="What We" emphasis="Believe" tone="dark" />
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-brand-muted">{about.approachIntro}</p>
           </Reveal>
 
-          <Reveal delay={0.1} className="mt-10 flex flex-col overflow-hidden rounded-2xl border border-black/10 sm:flex-row sm:items-stretch">
+          <Reveal delay={0.1} className="mt-10 flex flex-col overflow-hidden rounded-2xl border border-white/10 sm:flex-row sm:items-stretch">
             <div className="flex flex-1 flex-col justify-center bg-brand-dark px-8 py-6">
               <p className="text-sm font-semibold text-on-dark">{about.comparisonLeftLabel}</p>
               <p className="mt-1 text-sm text-on-dark/60">{about.comparisonLeftText}</p>
             </div>
             <div className="flex items-center justify-center bg-brand-ink px-4 py-3 sm:py-0">
-              <span className="text-sm font-semibold italic text-brand-gold">vs</span>
+              <span className="font-display text-sm font-semibold italic text-brand-gold">vs</span>
             </div>
             <div
               className="flex flex-1 flex-col justify-center px-8 py-6"
@@ -114,7 +116,7 @@ export default async function AboutPage() {
         <Section variant="paper" className="px-6 py-20">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <Heading lead="What Makes" emphasis="CYFORT Different" tone="paper" />
+              <Heading lead="What Makes" emphasis="CYFORT Different" tone="dark" />
             </Reveal>
             <StaggerGrid className="mt-12 grid gap-5 sm:grid-cols-2">
               {differentiators.map((item, index) => (
@@ -123,7 +125,7 @@ export default async function AboutPage() {
                     icon={DIFFERENTIATOR_ICONS[index % DIFFERENTIATOR_ICONS.length]}
                     title={item.title}
                     body={item.body}
-                    tone="paper"
+                    tone="dark"
                   />
                 </StaggerItem>
               ))}
@@ -136,7 +138,7 @@ export default async function AboutPage() {
         <MeshBlob tone="dark" className="absolute inset-0" />
         <Reveal className="relative mx-auto max-w-3xl text-center">
           {about.closingEyebrow ? <Eyebrow className="justify-center">{about.closingEyebrow}</Eyebrow> : null}
-          <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">{about.closingHeading}</h2>
+          <h2 className="mt-3 font-display text-3xl font-semibold sm:text-4xl">{about.closingHeading}</h2>
           <div className="mt-6">
             {closingParagraphs.map((paragraph, index) => (
               <p key={index} className="mb-4 text-base leading-relaxed text-on-dark/70">

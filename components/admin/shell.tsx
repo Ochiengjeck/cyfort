@@ -13,7 +13,7 @@ export function AdminShell({ userName, children }: AdminShellProps) {
     <div className="flex min-h-screen bg-brand-dark text-white">
       <aside className="flex w-64 shrink-0 flex-col border-r border-white/10 px-4 py-6">
         <Link href="/admin" className="mb-8 flex items-center gap-2 px-2">
-          <Image src="/images/brand/cyfort-emblem.png" alt="CyFort" width={64} height={64} className="h-8 w-8" />
+          <Image src="/images/brand/cyfort-emblem.png" alt="" width={64} height={64} className="h-8 w-8" />
           <div>
             <p className="text-sm font-semibold leading-tight">CYFORT</p>
             <p className="text-[11px] uppercase tracking-[0.15em] text-white/40">Admin</p>

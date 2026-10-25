@@ -29,6 +29,17 @@ export default async function EditCaseStudyPage({ params }: { params: Promise<{ 
         <TextareaField label="Summary" name="summary" defaultValue={item.summary} rows={3} required />
         <TextareaField label="Body (Markdown)" name="body" defaultValue={item.body} rows={12} required />
         <MediaPicker label="Cover Image" name="coverMediaId" defaultValue={item.coverMediaId} />
+        <TextareaField
+          label="Results Summary"
+          name="resultsSummary"
+          defaultValue={item.resultsSummary}
+          rows={4}
+          hint="One metric/result per line, shown as a stat row."
+        />
+        <TextareaField label="Testimonial Quote" name="testimonialQuote" defaultValue={item.testimonialQuote} rows={3} />
+        <FormField label="Testimonial Author" name="testimonialAuthor" defaultValue={item.testimonialAuthor} />
+        <FormField label="Duration" name="duration" defaultValue={item.duration} placeholder="e.g. 8 weeks" />
+        <FormField label="Team Size" name="teamSize" defaultValue={item.teamSize} placeholder="e.g. 3 consultants" />
         <ToggleField label="Published" name="published" defaultChecked={item.published} />
         <div>
           <SubmitButton />

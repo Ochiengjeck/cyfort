@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { isActiveLink } from "@/lib/nav";
 
 type MobileNavProps = {
   links: Array<{ id: string; label: string; href: string; openInNewTab: boolean }>;
@@ -12,6 +14,7 @@ type MobileNavProps = {
 export function MobileNav({ links }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!open) return;
@@ -87,24 +90,32 @@ export function MobileNav({ links }: MobileNavProps) {
               className="fixed inset-x-0 top-16 z-40 border-t border-white/10 bg-brand-dark/95 px-6 py-6 backdrop-blur-lg"
             >
               <ul className="flex flex-col gap-1">
-                {links.map((link, index) => (
-                  <motion.li
-                    key={link.id}
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.25, delay: index * 0.04 }}
-                  >
-                    <Link
-                      href={link.href}
-                      target={link.openInNewTab ? "_blank" : undefined}
-                      rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-                      onClick={() => setOpen(false)}
-                      className="block rounded-lg px-2 py-2.5 text-base text-on-dark/90 transition-colors hover:bg-white/5 hover:text-brand-gold"
+                {links.map((link, index) => {
+                  const active = isActiveLink(pathname, link.href);
+                  return (
+                    <motion.li
+                      key={link.id}
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.25, delay: index * 0.04 }}
                     >
-                      {link.label}
-                    </Link>
-                  </motion.li>
-                ))}
+                      <Link
+                        href={link.href}
+                        target={link.openInNewTab ? "_blank" : undefined}
+                        rel={link.openInNewTab ? "noopener noreferrer" : undefined}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={`block rounded-lg border-l-2 px-2 py-2.5 text-base transition-colors hover:bg-white/5 hover:text-brand-gold ${
+                          active
+                            ? "border-brand-gold bg-white/5 text-brand-gold"
+                            : "border-transparent text-on-dark/90"
+                        }`}
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.li>
+                  );
+                })}
               </ul>
             </motion.nav>
           </>

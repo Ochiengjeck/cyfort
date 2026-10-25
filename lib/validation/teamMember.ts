@@ -7,5 +7,6 @@ export const teamMemberSchema = z.object({
   photoMediaId: z.string().optional(),
   linkedinUrl: z.string().optional(),
   email: z.string().optional(),
+  reportsToId: z.string().optional(),
   published: z.boolean().default(true),
 });

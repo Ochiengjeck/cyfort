@@ -12,7 +12,10 @@ export default function NewServicePage() {
         <FormField label="Name" name="name" required />
         <FormField label="Slug" name="slug" hint="Leave blank to generate from the name." />
         <TextareaField label="Summary" name="summary" rows={3} required />
+        <FormField label="Icon" name="icon" hint="A lucide-react icon name, e.g. shield-check." />
         <RepeatableListField label="Sub-services" fieldName="items" />
+        <TextareaField label="Approach (Markdown)" name="approach" rows={6} hint="Narrative shown in the 'Our Approach' section." />
+        <TextareaField label="Outcomes" name="outcomes" rows={5} hint="One outcome per line." />
         <div>
           <SubmitButton label="Create" pendingLabel="Creating…" />
         </div>

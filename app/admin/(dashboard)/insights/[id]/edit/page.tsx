@@ -28,7 +28,14 @@ export default async function EditInsightPostPage({ params }: { params: Promise<
         <TextareaField label="Body (Markdown)" name="body" defaultValue={post.body} rows={12} required />
         <MediaPicker label="Cover Image" name="coverMediaId" defaultValue={post.coverMediaId} />
         <FormField label="Author Name" name="authorName" defaultValue={post.authorName} />
+        <FormField label="Author Role" name="authorRole" defaultValue={post.authorRole} />
         <FormField label="Category" name="category" defaultValue={post.category} />
+        <FormField
+          label="Tags"
+          name="tags"
+          defaultValue={post.tags}
+          hint="Comma-separated, e.g. Cybersecurity, Risk Management."
+        />
         <ToggleField label="Published" name="published" defaultChecked={post.published} />
         <div>
           <SubmitButton />

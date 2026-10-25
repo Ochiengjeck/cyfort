@@ -3,10 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { HeaderShell } from "./header-shell";
 
 export async function Header() {
-  // Required under Cache Components: our Prisma queries run through the
-  // synchronous better-sqlite3 driver, which would otherwise be eligible
-  // for (and complete during) static-shell prerendering. We always want
-  // live, per-request data, so this ties rendering to a real request first.
+  // Required under Cache Components: we always want live, per-request nav
+  // data (site name, nav links), so this ties rendering to a real request
+  // rather than letting it get baked into the static shell.
   await connection();
 
   const [settings, navLinks] = await Promise.all([

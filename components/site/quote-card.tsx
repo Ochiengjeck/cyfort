@@ -21,10 +21,10 @@ export function QuoteCard({ quote, className = "" }: QuoteCardProps) {
         className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent"
         style={{ animation: "shine-sweep 4.5s ease-in-out infinite" }}
       />
-      <span aria-hidden="true" className="absolute left-6 top-4 text-6xl text-brand-dark/10">
+      <span aria-hidden="true" className="absolute left-6 top-4 font-display text-6xl text-brand-dark/10">
         “
       </span>
-      <span className="relative italic">“{quote}”</span>
+      <span className="relative font-display italic">“{quote}”</span>
     </blockquote>
   );
 }

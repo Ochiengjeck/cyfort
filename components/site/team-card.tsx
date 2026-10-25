@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Mail } from "lucide-react";
 import { Card } from "./card";
 
 // lucide-react dropped brand/social-logo icons entirely (trademark policy) —
@@ -17,22 +18,31 @@ type TeamCardProps = {
   bio?: string | null;
   photoUrl?: string | null;
   linkedinUrl?: string | null;
+  email?: string | null;
+  featured?: boolean;
 };
 
-export function TeamCard({ name, role, bio, photoUrl, linkedinUrl }: TeamCardProps) {
+export function TeamCard({ name, role, bio, photoUrl, linkedinUrl, email, featured = false }: TeamCardProps) {
+  const photoSize = featured ? 176 : 128;
+
   return (
     <Card className="items-center text-center">
-      <div className="relative h-32 w-32 overflow-hidden rounded-full bg-brand-paper ring-2 ring-brand-gold/15 transition-all duration-300 group-hover:ring-brand-gold/50">
+      <div
+        className="relative overflow-hidden rounded-full bg-white/5 ring-2 ring-brand-gold/15 transition-all duration-300 group-hover:ring-brand-gold/50"
+        style={{ height: photoSize, width: photoSize }}
+      >
         {photoUrl ? (
           <Image
             src={photoUrl}
             alt={name}
-            width={128}
-            height={128}
+            width={photoSize}
+            height={photoSize}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-2xl font-semibold text-brand-gold/60">
+          <div
+            className={`flex h-full w-full items-center justify-center font-display font-semibold text-brand-gold/60 ${featured ? "text-3xl" : "text-2xl"}`}
+          >
             {name
               .split(" ")
               .map((part) => part[0])
@@ -41,19 +51,34 @@ export function TeamCard({ name, role, bio, photoUrl, linkedinUrl }: TeamCardPro
           </div>
         )}
       </div>
-      <h3 className="mt-4 text-base font-semibold text-on-paper">{name}</h3>
-      <p className="text-sm text-brand-gold">{role}</p>
-      {bio ? <p className="mt-2 text-sm text-brand-muted">{bio}</p> : null}
-      {linkedinUrl ? (
-        <a
-          href={linkedinUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${name} on LinkedIn`}
-          className="mt-4 inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 text-brand-muted transition-colors hover:border-brand-gold/40 hover:text-brand-gold"
-        >
-          <LinkedinGlyph className="h-4 w-4" />
-        </a>
+      <h3 className={`mt-4 font-semibold text-on-paper ${featured ? "text-xl" : "text-base"}`}>{name}</h3>
+      <p className={`text-brand-gold ${featured ? "text-base" : "text-sm"}`}>{role}</p>
+      {bio ? (
+        <p className={`mt-2 text-brand-muted ${featured ? "text-base" : "text-sm line-clamp-2"}`}>{bio}</p>
+      ) : null}
+      {linkedinUrl || email ? (
+        <div className="mt-4 flex items-center gap-2">
+          {linkedinUrl ? (
+            <a
+              href={linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${name} on LinkedIn`}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-brand-muted transition-colors hover:border-brand-gold/40 hover:text-brand-gold"
+            >
+              <LinkedinGlyph className="h-4 w-4" />
+            </a>
+          ) : null}
+          {email ? (
+            <a
+              href={`mailto:${email}`}
+              aria-label={`Email ${name}`}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-brand-muted transition-colors hover:border-brand-gold/40 hover:text-brand-gold"
+            >
+              <Mail className="h-4 w-4" aria-hidden="true" />
+            </a>
+          ) : null}
+        </div>
       ) : null}
     </Card>
   );

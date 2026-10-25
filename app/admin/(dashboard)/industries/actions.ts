@@ -9,6 +9,8 @@ function parse(formData: FormData) {
   return industrySchema.parse({
     name: formData.get("name"),
     blurb: formData.get("blurb") || undefined,
+    icon: formData.get("icon") || undefined,
+    imageMediaId: formData.get("imageMediaId") || undefined,
   });
 }
 

@@ -8,5 +8,10 @@ export const caseStudySchema = z.object({
   summary: z.string().min(1),
   body: z.string().min(1),
   coverMediaId: z.string().optional(),
+  resultsSummary: z.string().optional(),
+  testimonialQuote: z.string().optional(),
+  testimonialAuthor: z.string().optional(),
+  duration: z.string().optional(),
+  teamSize: z.string().optional(),
   published: z.boolean().default(false),
 });

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { FormField } from "@/components/admin/form-field";
 import { TextareaField } from "@/components/admin/textarea-field";
 import { ToggleField } from "@/components/admin/toggle-field";
+import { MediaPicker } from "@/components/admin/media-picker";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { updateJobPostingAction } from "../../actions";
 
@@ -30,7 +31,24 @@ export default async function EditJobPostingPage({ params }: { params: Promise<{
         </div>
         <FormField label="Employment Type" name="employmentType" defaultValue={job.employmentType} />
         <TextareaField label="Summary" name="summary" defaultValue={job.summary} rows={2} required />
-        <TextareaField label="Description (Markdown)" name="description" defaultValue={job.description} rows={10} required />
+        <TextareaField
+          label="Description (Markdown)"
+          name="description"
+          defaultValue={job.description}
+          rows={6}
+          required
+          hint="About the Role intro paragraph."
+        />
+        <MediaPicker label="Cover Image" name="coverMediaId" defaultValue={job.coverMediaId} />
+        <TextareaField label="Responsibilities" name="responsibilities" defaultValue={job.responsibilities} rows={5} hint="One per line." />
+        <TextareaField label="Requirements" name="requirements" defaultValue={job.requirements} rows={5} hint="One per line." />
+        <TextareaField label="Benefits" name="benefits" defaultValue={job.benefits} rows={4} hint="One per line." />
+        <FormField
+          label="Salary Range"
+          name="salaryRange"
+          defaultValue={job.salaryRange}
+          placeholder="e.g. Competitive, based on experience"
+        />
         <FormField label="Apply Email" name="applyEmail" defaultValue={job.applyEmail} />
         <FormField label="Closes At" name="closesAt" type="date" defaultValue={closesAtValue} />
         <ToggleField label="Published" name="published" defaultChecked={job.published} />

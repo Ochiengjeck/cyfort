@@ -27,10 +27,25 @@ export default async function EditServicePage({ params }: { params: Promise<{ id
         <FormField label="Name" name="name" defaultValue={service.name} required />
         <FormField label="Slug" name="slug" defaultValue={service.slug} required />
         <TextareaField label="Summary" name="summary" defaultValue={service.summary} rows={3} required />
+        <FormField label="Icon" name="icon" defaultValue={service.icon} hint="A lucide-react icon name, e.g. shield-check." />
         <RepeatableListField
           label="Sub-services"
           fieldName="items"
           defaultValues={service.items.map((item) => item.label)}
+        />
+        <TextareaField
+          label="Approach (Markdown)"
+          name="approach"
+          defaultValue={service.approach ?? ""}
+          rows={6}
+          hint="Narrative shown in the 'Our Approach' section."
+        />
+        <TextareaField
+          label="Outcomes"
+          name="outcomes"
+          defaultValue={service.outcomes ?? ""}
+          rows={5}
+          hint="One outcome per line."
         />
         <div>
           <SubmitButton />

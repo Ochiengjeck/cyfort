@@ -14,8 +14,8 @@ const TIER_CLASSES: Record<HeadingTier, string> = {
   // Oversized, uppercase, non-italic — a deliberately blunter brutalist
   // treatment for the bold-marquee home hero, distinct from the italic
   // gradient-emphasis pattern used everywhere else.
-  mega: "hero-headline text-6xl sm:text-7xl lg:text-8xl xl:text-[6.5rem] leading-[0.95] tracking-tight uppercase",
-  hero: "hero-headline text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.05] tracking-tight",
+  mega: "hero-headline text-6xl sm:text-7xl lg:text-8xl xl:text-[6.5rem] leading-[1.08] tracking-tight uppercase",
+  hero: "hero-headline text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.18] tracking-tight",
   banner: "text-4xl sm:text-5xl lg:text-6xl leading-tight",
   section: "text-3xl sm:text-4xl leading-tight",
 };
@@ -37,12 +37,12 @@ export function Heading({
   emphasis,
   as = "h2",
   tier = "section",
-  tone = "paper",
+  tone = "dark",
   className = "",
 }: HeadingProps) {
   const Tag = as;
   return (
-    <Tag className={`${TIER_CLASSES[tier]} ${className}`}>
+    <Tag className={`font-display ${TIER_CLASSES[tier]} ${className}`}>
       <span className="font-light">{lead} </span>
       <span className={`font-semibold ${tier === "mega" ? "" : "italic"} ${EMPHASIS_CLASSES[tone]}`}>{emphasis}</span>
     </Tag>
