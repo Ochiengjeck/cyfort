@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/metadata";
 
@@ -17,6 +18,8 @@ const STATIC_ROUTES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  await connection();
+
   const [services, caseStudies, insights, jobs] = await Promise.all([
     prisma.service.findMany({ select: { slug: true, updatedAt: true } }),
     prisma.caseStudy.findMany({ where: { published: true }, select: { slug: true, updatedAt: true } }),
