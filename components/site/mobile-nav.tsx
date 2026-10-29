@@ -6,13 +6,16 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { isActiveLink } from "@/lib/nav";
+import { ThemeToggle } from "./theme-toggle";
+import type { Theme } from "@/lib/theme/constants";
 
 type MobileNavProps = {
   links: Array<{ id: string; label: string; href: string; openInNewTab: boolean }>;
   servicesMenu?: Array<{ id: string; slug: string; name: string }>;
+  theme: Theme;
 };
 
-export function MobileNav({ links, servicesMenu = [] }: MobileNavProps) {
+export function MobileNav({ links, servicesMenu = [], theme }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const [servicesExpanded, setServicesExpanded] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -196,6 +199,11 @@ export function MobileNav({ links, servicesMenu = [] }: MobileNavProps) {
                   );
                 })}
               </ul>
+
+              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                <span className="text-sm text-on-dark/60">Theme</span>
+                <ThemeToggle theme={theme} />
+              </div>
             </motion.nav>
           </>
         ) : null}

@@ -42,7 +42,6 @@ export default async function HomePage() {
   ]);
 
   const featuredServices = services.filter((service) => service.featured);
-  const trustBadges = about?.trustBadges?.split("\n").map((item) => item.trim()).filter(Boolean) ?? [];
 
   const whoWeAreTeaser = about?.whoWeAreBody.split("\n\n")[0];
 
@@ -161,26 +160,6 @@ export default async function HomePage() {
             <Marquee items={marqueeItems} />
           </div>
         ) : null}
-
-        {trustBadges.length > 0 ? (
-          <div className="relative border-t border-white/10 px-6 py-5 lg:px-12">
-            <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3">
-              {about?.trustStripLabel ? (
-                <span className="text-xs font-semibold uppercase tracking-wide text-on-dark/40">
-                  {about.trustStripLabel}
-                </span>
-              ) : null}
-              {trustBadges.map((badge) => (
-                <span
-                  key={badge}
-                  className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-on-dark/70"
-                >
-                  {badge}
-                </span>
-              ))}
-            </div>
-          </div>
-        ) : null}
       </Section>
 
       {/* Who We Are teaser */}
@@ -248,7 +227,7 @@ export default async function HomePage() {
                 </p>
                 <Link
                   href="/industries"
-                  className="mt-5 inline-flex items-center gap-1 rounded-full border border-black/10 px-4 py-2 text-sm font-medium text-on-paper transition-colors hover:border-brand-gold hover:text-brand-gold"
+                  className="mt-5 inline-flex items-center gap-1 rounded-full border border-border-on-paper px-4 py-2 text-sm font-medium text-on-paper transition-colors hover:border-brand-gold hover:text-brand-gold"
                 >
                   See how we help your sector
                   <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -258,7 +237,7 @@ export default async function HomePage() {
                 {industries.map((industry) => (
                   <span
                     key={industry.id}
-                    className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-on-paper"
+                    className="inline-flex items-center gap-2 rounded-full border border-border-on-paper bg-brand-paper-alt px-4 py-2 text-sm text-on-paper"
                   >
                     <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" aria-hidden="true" />
                     {industry.name}

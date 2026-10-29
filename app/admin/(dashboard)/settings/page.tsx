@@ -49,7 +49,9 @@ export default async function AdminSettingsPage() {
             <form action={updateThemeAction} className="flex flex-col gap-5">
               <p className="text-sm text-white/50">
                 These 8 brand colors drive every page. Text/background pairings are fixed, so any
-                combination you choose stays legible.
+                combination you choose stays legible. The site also supports a visitor-toggleable
+                light/dark theme — Paper Background, Paper Alt, and Muted Text below apply to{" "}
+                <span className="text-white/70">light mode only</span>; dark mode uses fixed tones.
               </p>
               <div className="grid grid-cols-2 gap-5">
                 <ColorField label="Dark Surface" name="colorDark" defaultValue={settings.colorDark} />
@@ -57,9 +59,9 @@ export default async function AdminSettingsPage() {
                 <ColorField label="Gold (primary accent)" name="colorGold" defaultValue={settings.colorGold} />
                 <ColorField label="Gold — Dark" name="colorGoldDark" defaultValue={settings.colorGoldDark} />
                 <ColorField label="Gold — Light" name="colorGoldLight" defaultValue={settings.colorGoldLight} />
-                <ColorField label="Paper Background" name="colorPaper" defaultValue={settings.colorPaper} />
-                <ColorField label="Paper Alt (white)" name="colorPaperAlt" defaultValue={settings.colorPaperAlt} />
-                <ColorField label="Muted Text" name="colorMuted" defaultValue={settings.colorMuted} />
+                <ColorField label="Paper Background (light mode)" name="colorPaper" defaultValue={settings.colorPaper} />
+                <ColorField label="Paper Alt (light mode)" name="colorPaperAlt" defaultValue={settings.colorPaperAlt} />
+                <ColorField label="Muted Text (light mode)" name="colorMuted" defaultValue={settings.colorMuted} />
               </div>
               <div>
                 <SubmitButton />

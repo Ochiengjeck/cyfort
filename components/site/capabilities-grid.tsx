@@ -28,8 +28,9 @@ const PILLAR_ORDER: ServicePillar[] = ["ADVISE", "SECURE_ASSURE", "BUILD_RUN"];
  * "Our full capabilities" — all 9 service lines grouped into the three
  * pillars (Advise / Secure & Assure / Build & Run), matching the design
  * template's home + services page treatment. The Secure & Assure pillar is
- * CyFort's core, so it renders as a highlighted dark card even on this
- * light section.
+ * CyFort's core, so it renders as a permanently dark highlighted card
+ * regardless of the paper section's light/dark theme; the other two
+ * pillars use the theme-reactive paper tokens.
  */
 export function CapabilitiesGrid({ services }: CapabilitiesGridProps) {
   const grouped = PILLAR_ORDER.map((pillar) => ({
@@ -57,7 +58,7 @@ export function CapabilitiesGrid({ services }: CapabilitiesGridProps) {
                 className={`flex h-full flex-col rounded-2xl border p-6 ${
                   group.meta.highlight
                     ? "border-brand-dark/0 bg-brand-dark text-on-dark"
-                    : "border-black/10 bg-white text-on-paper"
+                    : "border-border-on-paper bg-brand-paper-alt text-on-paper"
                 }`}
               >
                 <p

@@ -10,7 +10,7 @@ type EmptyStateProps = {
 
 export function EmptyState({ heading, message, cta }: EmptyStateProps) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-dashed border-black/15 bg-brand-paper px-8 py-20 text-center">
+    <div className="relative overflow-hidden rounded-2xl border border-dashed border-border-on-paper bg-brand-paper px-8 py-20 text-center">
       <DotGrid className="absolute inset-0" />
       <Image
         src="/images/brand/cyfort-emblem.png"

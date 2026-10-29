@@ -1,29 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  /* Admin-editable brand tokens (defaults; overridden per-request by
-     components/site/theme-style.tsx from the SiteSettings row). */
+  /* Theme-independent brand tokens — admin-editable (via SiteSettings +
+     components/site/theme-style.tsx), identical in both light and dark
+     theme. These are the permanently-dark brand-anchor surfaces (navbar,
+     hero, footer, gold CTA bands) and the shared gold accent family. */
   --color-brand-dark: #0a0a0b;
   --color-brand-ink: #141414;
   --color-brand-gold: #c9a227;
   --color-brand-gold-dark: #9c7a3c;
   --color-brand-gold-light: #e8ce8f;
-  /* Warm off-white "paper" tones — genuinely light surfaces, distinct from
-     the dark hero/navbar/footer/CTA bands. */
-  --color-brand-paper: #f7f6f2;
-  --color-brand-paper-alt: #efede6;
-  --color-brand-muted: #9ca3af;
-
-  /* Fixed foreground pairings — NOT admin-editable. Keeps every
-     background/foreground combination legible regardless of which brand
-     colors an admin chooses. */
   --color-on-dark: #ffffff;
   --color-on-gold: var(--color-brand-dark);
-  --color-on-paper: #15140f;
   --color-muted-on-dark: rgba(255, 255, 255, 0.65);
+
+  /* Paper-surface tokens — these are the ones a light/dark theme toggle
+     switches. DARK is the default (this :root block); [data-theme="light"]
+     below overrides them. Deliberately a softer charcoal than
+     --color-brand-dark, not pure near-black, so dark mode reads as a
+     comfortable dark theme rather than the old "too dark" look. Not
+     admin-editable — SiteSettings' Paper/Paper Alt/Muted fields only apply
+     to light mode (see [data-theme="light"] below and theme-style.tsx). */
+  --color-brand-paper: #1a1a1d;
+  --color-brand-paper-alt: #131315;
+  --color-on-paper: #f5f4f0;
+  --color-brand-muted: #a8a7a2;
+  --color-muted-on-paper: rgba(245, 244, 240, 0.62);
+  --color-border-on-paper: rgba(245, 244, 240, 0.12);
+  --color-surface-on-paper: rgba(245, 244, 240, 0.05);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  /* Light-mode paper-surface tokens. colorPaper/colorPaperAlt/colorMuted
+     remain admin-editable via SiteSettings — theme-style.tsx scopes its
+     injected overrides to this selector so they never leak into dark mode. */
+  --color-brand-paper: #f7f6f2;
+  --color-brand-paper-alt: #efede6;
+  --color-on-paper: #15140f;
+  --color-brand-muted: #9ca3af;
   --color-muted-on-paper: rgba(21, 20, 15, 0.62);
   --color-border-on-paper: rgba(21, 20, 15, 0.12);
   --color-surface-on-paper: rgba(21, 20, 15, 0.04);
+  color-scheme: light;
 }
 
 @theme inline {

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import { ThemeStyle } from "@/components/site/theme-style";
 import { SITE_URL, SITE_NAME } from "@/lib/metadata";
+import { THEME_COOKIE_NAME, parseTheme } from "@/lib/theme/constants";
 import "./globals.css";
 
 export const instant = false;
@@ -50,10 +52,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // Resolved server-side before any HTML is sent, so the correct theme
+  // renders on the very first paint — no flash of the wrong theme. Defaults
+  // to dark whenever the cookie is absent or invalid (first-ever visit).
+  const theme = parseTheme((await cookies()).get(THEME_COOKIE_NAME)?.value);
+
   return (
     <html
       lang="en"
+      data-theme={theme}
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
