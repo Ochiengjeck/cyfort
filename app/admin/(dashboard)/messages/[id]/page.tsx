@@ -29,6 +29,24 @@ export default async function AdminMessageDetailPage({ params }: { params: Promi
         {new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short" }).format(message.createdAt)}
       </p>
 
+      {message.serviceInterest || message.sector ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {message.serviceInterest ? (
+            <span className="rounded-full bg-brand-gold/10 px-3 py-1 text-xs font-medium text-brand-gold">
+              {message.serviceInterest}
+            </span>
+          ) : null}
+          {message.sector ? (
+            <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/70">
+              {message.sector}
+            </span>
+          ) : null}
+          <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-white/40">
+            Consent: {message.consent ? "Yes" : "No"}
+          </span>
+        </div>
+      ) : null}
+
       <div className="mt-6 whitespace-pre-wrap rounded-lg border border-white/10 bg-white/[0.03] p-5 text-sm text-white/80">
         {message.message}
       </div>

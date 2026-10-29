@@ -31,8 +31,8 @@ const SOCIAL_ICONS: Record<string, React.ReactNode> = {
 // "Navigate" is split into two themed columns instead of one flat list —
 // grouped by href against the shared NavLink set rather than a new schema
 // field, since the full set of routes is fixed and well known.
-const COMPANY_HREFS = ["/about", "/team", "/careers", "/contact"];
-const RESOURCE_HREFS = ["/industries", "/case-studies", "/insights"];
+const COMPANY_HREFS = ["/about", "/contact"];
+const RESOURCE_HREFS = ["/industries", "/blog"];
 
 function ColumnHeading({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
@@ -54,7 +54,7 @@ export async function Footer() {
   const [settings, navLinks, services] = await Promise.all([
     prisma.siteSettings.findFirst(),
     prisma.navLink.findMany({ orderBy: { order: "asc" } }),
-    prisma.service.findMany({ orderBy: { order: "asc" } }),
+    prisma.service.findMany({ where: { featured: true }, orderBy: { order: "asc" } }),
   ]);
 
   const year = new Date().getFullYear();
@@ -168,7 +168,7 @@ export async function Footer() {
 
           {services.length > 0 ? (
             <div>
-              <ColumnHeading icon={<Boxes className="h-3.5 w-3.5" aria-hidden="true" />}>Services</ColumnHeading>
+              <ColumnHeading icon={<Boxes className="h-3.5 w-3.5" aria-hidden="true" />}>Key Services</ColumnHeading>
               <ul className="mt-4 flex flex-col gap-2">
                 {services.map((service) => (
                   <li key={service.id}>
@@ -180,6 +180,11 @@ export async function Footer() {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link href="/services" className="text-sm text-on-dark/70 transition-colors hover:text-brand-gold">
+                    All services
+                  </Link>
+                </li>
               </ul>
             </div>
           ) : null}

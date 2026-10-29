@@ -7,12 +7,10 @@ import { buildMetadata } from "@/lib/metadata";
 import { Section } from "@/components/site/section";
 import { Heading } from "@/components/site/heading";
 import { BadgePill } from "@/components/site/badge-pill";
-import { QuoteCard } from "@/components/site/quote-card";
-import { ServiceCard } from "@/components/site/service-card";
-import { IndustryCard } from "@/components/site/industry-card";
+import { KeyServicesSection } from "@/components/site/key-services-section";
+import { CapabilitiesGrid } from "@/components/site/capabilities-grid";
 import { IconFeatureCard, DIFFERENTIATOR_ICONS } from "@/components/site/icon-feature-card";
 import { PromiseTimeline, PROMISE_ICONS } from "@/components/site/promise-timeline";
-import { Eyebrow } from "@/components/site/eyebrow";
 import { Button } from "@/components/site/button";
 import { AppIcon } from "@/components/site/icons";
 import { DotGrid } from "@/components/site/decorative/dot-grid";
@@ -38,10 +36,13 @@ export default async function HomePage() {
     prisma.homeHero.findFirst(),
     prisma.aboutContent.findFirst(),
     prisma.differentiator.findMany({ orderBy: { order: "asc" } }),
-    prisma.service.findMany({ orderBy: { order: "asc" } }),
+    prisma.service.findMany({ orderBy: { order: "asc" }, include: { items: true } }),
     prisma.industry.findMany({ orderBy: { order: "asc" } }),
     prisma.promiseItem.findMany({ orderBy: { order: "asc" } }),
   ]);
+
+  const featuredServices = services.filter((service) => service.featured);
+  const trustBadges = about?.trustBadges?.split("\n").map((item) => item.trim()).filter(Boolean) ?? [];
 
   const whoWeAreTeaser = about?.whoWeAreBody.split("\n\n")[0];
 
@@ -107,11 +108,11 @@ export default async function HomePage() {
                 ecosystems, and drive sustainable growth across the continent.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Button href={hero?.primaryCtaHref ?? "/services"}>
-                  {hero?.primaryCtaLabel ?? "Explore Our Services"}
+                <Button href={hero?.primaryCtaHref ?? "/contact"}>
+                  {hero?.primaryCtaLabel ?? "Book a Data Protection Health Check"}
                 </Button>
-                <Button href={hero?.secondaryCtaHref ?? "/case-studies"} variant="outline">
-                  {hero?.secondaryCtaLabel ?? "Discover Our Impact"}
+                <Button href={hero?.secondaryCtaHref ?? "/services"} variant="outline">
+                  {hero?.secondaryCtaLabel ?? "Explore our services"}
                 </Button>
               </div>
               <div className="mt-12 flex items-center gap-1.5 text-sm text-on-dark/50">
@@ -160,6 +161,26 @@ export default async function HomePage() {
             <Marquee items={marqueeItems} />
           </div>
         ) : null}
+
+        {trustBadges.length > 0 ? (
+          <div className="relative border-t border-white/10 px-6 py-5 lg:px-12">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3">
+              {about?.trustStripLabel ? (
+                <span className="text-xs font-semibold uppercase tracking-wide text-on-dark/40">
+                  {about.trustStripLabel}
+                </span>
+              ) : null}
+              {trustBadges.map((badge) => (
+                <span
+                  key={badge}
+                  className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-on-dark/70"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </Section>
 
       {/* Who We Are teaser */}
@@ -200,7 +221,7 @@ export default async function HomePage() {
                     icon={DIFFERENTIATOR_ICONS[index % DIFFERENTIATOR_ICONS.length]}
                     title={item.title}
                     body={item.body}
-                    tone="dark"
+                    tone="paper"
                   />
                 </StaggerItem>
               ))}
@@ -209,38 +230,42 @@ export default async function HomePage() {
         </Section>
       ) : null}
 
-      {/* Services */}
-      {services.length > 0 ? (
-        <Section variant="paperAlt" className="px-6 py-24">
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <Heading lead="Our Service" emphasis="Portfolio" tone="dark" />
-            </Reveal>
-            <StaggerGrid className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service) => (
-                <StaggerItem key={service.id}>
-                  <ServiceCard slug={service.slug} name={service.name} summary={service.summary} icon={service.icon} />
-                </StaggerItem>
-              ))}
-            </StaggerGrid>
-          </div>
-        </Section>
-      ) : null}
+      {/* Key services — the four packaged entry points */}
+      {featuredServices.length > 0 ? <KeyServicesSection services={featuredServices} /> : null}
 
-      {/* Industries */}
+      {/* Full capabilities — all 9 service lines grouped by pillar */}
+      {services.length > 0 ? <CapabilitiesGrid services={services} /> : null}
+
+      {/* Industries — simple pill list */}
       {industries.length > 0 ? (
         <Section variant="paper" className="px-6 py-24">
           <div className="mx-auto max-w-5xl">
-            <Reveal className="text-center">
-              <Heading lead="Industries" emphasis="We Serve" tone="dark" />
+            <Reveal className="grid items-center gap-10 sm:grid-cols-[1fr_1.1fr]">
+              <div>
+                <Heading lead="Industries" emphasis="We Serve" tone="dark" />
+                <p className="mt-5 text-base leading-relaxed text-brand-muted">
+                  Deepest experience where regulation, sensitive data and donor scrutiny meet.
+                </p>
+                <Link
+                  href="/industries"
+                  className="mt-5 inline-flex items-center gap-1 rounded-full border border-black/10 px-4 py-2 text-sm font-medium text-on-paper transition-colors hover:border-brand-gold hover:text-brand-gold"
+                >
+                  See how we help your sector
+                  <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </Link>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {industries.map((industry) => (
+                  <span
+                    key={industry.id}
+                    className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-on-paper"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" aria-hidden="true" />
+                    {industry.name}
+                  </span>
+                ))}
+              </div>
             </Reveal>
-            <StaggerGrid className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {industries.map((industry) => (
-                <StaggerItem key={industry.id}>
-                  <IndustryCard name={industry.name} blurb={industry.blurb} />
-                </StaggerItem>
-              ))}
-            </StaggerGrid>
           </div>
         </Section>
       ) : null}
@@ -267,18 +292,43 @@ export default async function HomePage() {
       ) : null}
 
       {/* Closing CTA */}
-      {about?.closingQuote ? (
+      {about?.closingHeading ? (
         <Section variant="paperAlt" className="px-6 py-24">
-          <div className="mx-auto max-w-3xl">
-            <Reveal>
-              {about.closingEyebrow ? <Eyebrow className="text-center">{about.closingEyebrow}</Eyebrow> : null}
-              {about.closingHeading ? (
-                <h2 className="mt-3 text-center font-display text-3xl font-semibold text-on-paper sm:text-4xl">
-                  {about.closingHeading}
-                </h2>
-              ) : null}
-              <div className="mt-10">
-                <QuoteCard quote={about.closingQuote} />
+          <div className="mx-auto max-w-5xl">
+            <Reveal
+              className="relative overflow-hidden rounded-2xl px-8 py-10 sm:px-12 sm:py-12"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--color-brand-gold-dark), var(--color-brand-gold), var(--color-brand-gold-light))",
+              }}
+            >
+              <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+                <div className="max-w-xl">
+                  {about.closingEyebrow ? (
+                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-dark/60">
+                      {about.closingEyebrow}
+                    </p>
+                  ) : null}
+                  <h2 className="mt-3 font-display text-3xl font-semibold text-brand-dark sm:text-4xl">
+                    {about.closingHeading}
+                  </h2>
+                  {about.closingBody ? (
+                    <p className="mt-4 text-base leading-relaxed text-brand-dark/80">
+                      {about.closingBody.split("\n\n")[0]}
+                    </p>
+                  ) : null}
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button href={about.closingPrimaryCtaHref} variant="dark">
+                    {about.closingPrimaryCtaLabel}
+                  </Button>
+                  <Link
+                    href={about.closingSecondaryCtaHref}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-dark/30 px-6 py-3 text-sm font-semibold text-brand-dark transition-all duration-300 hover:border-brand-dark hover:-translate-y-0.5"
+                  >
+                    {about.closingSecondaryCtaLabel}
+                  </Link>
+                </div>
               </div>
             </Reveal>
           </div>

@@ -1,33 +1,15 @@
 import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { buildMetadata } from "@/lib/metadata";
-import { resolveMediaUrl } from "@/lib/media";
 import { Section } from "@/components/site/section";
+import { Heading } from "@/components/site/heading";
 import { IndustryCard } from "@/components/site/industry-card";
+import { IndustryFocusCard } from "@/components/site/industry-focus-card";
 import { PageBanner } from "@/components/site/page-banner";
+import { Reveal } from "@/components/site/motion/reveal";
 import { StaggerGrid, StaggerItem } from "@/components/site/motion/stagger-grid";
 
 export const instant = false;
-
-// Bento span per item index — literal class strings only, indexed by
-// position via modulo so an admin adding more industries never breaks it.
-// Tiles a clean 6-wide block for the usual 10 industries: featured hero
-// (3x2) + two 3-wide tiles complete rows 1-2; two rows of three 2-wide
-// tiles complete rows 3-4; a full-width closer completes row 5 — zero
-// leftover cells at sm: or lg:, unlike a flat col-span-2 repeat which
-// leaves a trailing gap when 7 tiles don't divide evenly into 6 columns.
-const INDUSTRY_SPANS = [
-  "sm:col-span-2 lg:col-span-3 lg:row-span-2",
-  "lg:col-span-3",
-  "lg:col-span-3",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "lg:col-span-2",
-  "sm:col-span-2 lg:col-span-6",
-];
 
 export async function generateMetadata() {
   return buildMetadata({
@@ -39,37 +21,64 @@ export async function generateMetadata() {
 
 export default async function IndustriesPage() {
   await connection();
-  const industries = await prisma.industry.findMany({ orderBy: { order: "asc" } });
+  const industries = await prisma.industry.findMany({
+    orderBy: { order: "asc" },
+    include: { startService: { select: { slug: true, name: true } } },
+  });
+
+  const focusIndustries = industries.filter((industry) => industry.featured);
+  const otherIndustries = industries.filter((industry) => !industry.featured);
 
   return (
     <>
       <PageBanner
-        lead="Advisory shaped by"
-        emphasis="your sector"
-        description="From regulated financial institutions to donor-funded humanitarian programs, our engagements are grounded in the realities of each sector we serve."
+        lead="Where regulation, sensitive"
+        emphasis="data and scrutiny meet"
+        description="We go deepest in four sectors, and bring the same discipline to every organisation we serve."
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Industries" }]}
         image={{ src: "/images/generated/banners/industries.jpg", objectPosition: "70% 30%" }}
       />
 
-      <Section variant="paperAlt" className="px-6 py-20">
-        <div className="mx-auto max-w-6xl">
-          <StaggerGrid className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:auto-rows-[minmax(11rem,auto)] lg:grid-cols-6 grid-flow-dense">
-            {await Promise.all(
-              industries.map(async (industry, index) => (
-                <StaggerItem key={industry.id} className={INDUSTRY_SPANS[index % INDUSTRY_SPANS.length]}>
-                  <IndustryCard
+      {focusIndustries.length > 0 ? (
+        <Section variant="dark" className="px-6 py-20">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="text-xs font-semibold uppercase tracking-wide text-brand-gold">Focus sectors</p>
+            </Reveal>
+            <StaggerGrid className="mt-6 grid gap-5 sm:grid-cols-2">
+              {focusIndustries.map((industry, index) => (
+                <StaggerItem key={industry.id}>
+                  <IndustryFocusCard
+                    index={index + 1}
                     name={industry.name}
-                    blurb={industry.blurb}
-                    icon={industry.icon}
-                    imageUrl={await resolveMediaUrl(industry.imageMediaId)}
-                    featured={index === 0}
+                    drivingText={industry.drivingText}
+                    startText={industry.startText}
+                    startServiceSlug={industry.startService?.slug}
+                    startServiceName={industry.startService?.name}
                   />
                 </StaggerItem>
-              )),
-            )}
-          </StaggerGrid>
-        </div>
-      </Section>
+              ))}
+            </StaggerGrid>
+          </div>
+        </Section>
+      ) : null}
+
+      {otherIndustries.length > 0 ? (
+        <Section variant="paperAlt" className="px-6 py-20">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <Heading lead="We also" emphasis="serve" tone="dark" />
+            </Reveal>
+            <StaggerGrid className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {otherIndustries.map((industry) => (
+                <StaggerItem key={industry.id}>
+                  <IndustryCard name={industry.name} blurb={industry.blurb} tone="paper" />
+                </StaggerItem>
+              ))}
+            </StaggerGrid>
+          </div>
+        </Section>
+      ) : null}
     </>
   );
 }

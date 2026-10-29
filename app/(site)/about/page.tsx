@@ -63,7 +63,7 @@ export default async function AboutPage() {
       <Section variant="paper" className="px-6 py-20">
         <StaggerGrid className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2">
           <StaggerItem>
-            <Card className="h-full">
+            <Card className="h-full" tone="paper">
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold">
                 <AppIcon name="compass" className="h-5 w-5" />
               </span>
@@ -72,7 +72,7 @@ export default async function AboutPage() {
             </Card>
           </StaggerItem>
           <StaggerItem>
-            <Card className="h-full">
+            <Card className="h-full" tone="paper">
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold">
                 <AppIcon name="target" className="h-5 w-5" />
               </span>
@@ -129,7 +129,7 @@ export default async function AboutPage() {
                     icon={DIFFERENTIATOR_ICONS[index % DIFFERENTIATOR_ICONS.length]}
                     title={item.title}
                     body={item.body}
-                    tone="dark"
+                    tone="paper"
                   />
                 </StaggerItem>
               ))}

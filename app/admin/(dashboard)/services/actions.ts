@@ -19,6 +19,12 @@ function parse(formData: FormData) {
     approach: formData.get("approach") || undefined,
     outcomes: formData.get("outcomes") || undefined,
     items: parseRepeatableField(formData, "items"),
+    pillar: formData.get("pillar") || undefined,
+    featured: formData.get("featured") === "on",
+    ctaLabel: formData.get("ctaLabel") || undefined,
+    ctaHref: formData.get("ctaHref") || undefined,
+    builtForTags: formData.get("builtForTags") || undefined,
+    triggerText: formData.get("triggerText") || undefined,
   });
 }
 

@@ -58,10 +58,7 @@ async function seedNavLinks() {
     { label: "About", href: "/about" },
     { label: "Services", href: "/services" },
     { label: "Industries", href: "/industries" },
-    { label: "Team", href: "/team" },
-    { label: "Case Studies", href: "/case-studies" },
-    { label: "Insights", href: "/insights" },
-    { label: "Careers", href: "/careers" },
+    { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ];
 
@@ -78,11 +75,11 @@ async function seedHomeHero() {
     data: {
       eyebrow: "TECHNOLOGY · ADVISORY · CYBERSECURITY",
       headlineLead: "Securing",
-      headlineEmphasis: "Africa's Digital Future",
-      primaryCtaLabel: "Explore Our Services",
-      primaryCtaHref: "/services",
-      secondaryCtaLabel: "Discover Our Impact",
-      secondaryCtaHref: "/case-studies",
+      headlineEmphasis: "Digital Growth Across Africa",
+      primaryCtaLabel: "Book a Data Protection Health Check",
+      primaryCtaHref: "/contact",
+      secondaryCtaLabel: "Explore our services",
+      secondaryCtaHref: "/services",
     },
   });
 }
@@ -169,6 +166,7 @@ async function seedServices() {
       name: "Technology Advisory",
       summary: "Helping organizations make informed technology decisions aligned with business strategy.",
       icon: "compass",
+      pillar: "ADVISE" as const,
       items: [
         "Technology Strategy Development",
         "CIO Advisory",
@@ -186,10 +184,19 @@ async function seedServices() {
       ].join("\n"),
     },
     {
-      slug: "cybersecurity-consulting",
-      name: "Cybersecurity Consulting",
-      summary: "Protecting organizations against an increasingly sophisticated threat landscape.",
+      slug: "cybersecurity-as-a-service",
+      name: "Cybersecurity as a Service",
+      summary:
+        "A complete security function without building one in-house. We lead your security programme, run the day-to-day controls and keep your board informed.",
       icon: "shield-check",
+      pillar: "SECURE_ASSURE" as const,
+      featured: true,
+      ctaLabel: "Request a cyber assessment",
+      ctaHref: "/contact",
+      builtForTags: ["Banks & microfinance", "SACCOs", "Fintechs", "Mid-size companies", "INGO country offices"].join(
+        "\n",
+      ),
+      triggerText: "A CBK or SASRA cybersecurity directive",
       items: [
         "Cybersecurity Risk Assessments",
         "Vulnerability Assessments",
@@ -209,10 +216,19 @@ async function seedServices() {
       ].join("\n"),
     },
     {
-      slug: "technology-risk-assurance",
-      name: "Technology Risk & Assurance",
-      summary: "Providing independent assurance over technology environments and digital risks.",
+      slug: "it-audit-technology-assurance",
+      name: "IT Audit & Technology Assurance",
+      summary:
+        "Independent assurance over the systems your numbers depend on, for audit committees, ERP owners and audit firms that need specialist ITGC capacity.",
       icon: "clipboard-check",
+      pillar: "SECURE_ASSURE" as const,
+      featured: true,
+      ctaLabel: "Request an ITGC review",
+      ctaHref: "/contact",
+      builtForTags: ["Banks & microfinance", "Audit committees", "Audit firms", "ERP go-lives", "Donor-funded programmes"].join(
+        "\n",
+      ),
+      triggerText: "A new ERP or a qualified audit finding",
       items: [
         "IT Audits",
         "ERP Control Reviews",
@@ -230,10 +246,19 @@ async function seedServices() {
       ].join("\n"),
     },
     {
-      slug: "digital-governance-compliance",
-      name: "Digital Governance & Compliance",
-      summary: "Helping organizations meet regulatory and industry expectations.",
+      slug: "data-protection-compliance",
+      name: "Data Protection Compliance",
+      summary:
+        "The ODPC now runs compliance audits and issues penalty and compensation orders. We get you registered, compliant and able to prove it.",
       icon: "scale",
+      pillar: "SECURE_ASSURE" as const,
+      featured: true,
+      ctaLabel: "Book a Data Protection Health Check",
+      ctaHref: "/contact",
+      builtForTags: ["Banks & microfinance", "SACCOs", "Hospitals & clinics", "Digital lenders", "NGOs", "Schools"].join(
+        "\n",
+      ),
+      triggerText: "An ODPC complaint, audit or registration deadline",
       items: [
         "Data Protection Compliance",
         "Cybersecurity Governance Frameworks",
@@ -255,6 +280,7 @@ async function seedServices() {
       name: "Cloud & Digital Infrastructure",
       summary: "Supporting secure adoption of modern technologies.",
       icon: "cloud",
+      pillar: "SECURE_ASSURE" as const,
       items: [
         "Cloud Readiness Assessments",
         "Cloud Governance",
@@ -275,6 +301,7 @@ async function seedServices() {
       name: "Systems & Software Development",
       summary: "Custom-built systems and software, designed, developed, and implemented around your business needs.",
       icon: "code",
+      pillar: "BUILD_RUN" as const,
       items: [
         "Custom Software Development",
         "Web & Mobile Application Development",
@@ -296,6 +323,7 @@ async function seedServices() {
       name: "Enterprise Technology Solutions",
       summary: "Helping organizations maximize value from business systems.",
       icon: "boxes",
+      pillar: "ADVISE" as const,
       items: [
         "ERP Advisory",
         "Business Process Automation",
@@ -313,10 +341,17 @@ async function seedServices() {
       ].join("\n"),
     },
     {
-      slug: "managed-it-services",
-      name: "Managed IT Services",
-      summary: "Reliable, proactive IT support that keeps organizations running securely.",
+      slug: "outsourced-it-technology-leadership",
+      name: "Outsourced IT & Technology Leadership",
+      summary:
+        "Senior IT direction when you need it, or your entire IT function run for you. Either way, your systems are secure, supported and aligned to the business.",
       icon: "headset",
+      pillar: "BUILD_RUN" as const,
+      featured: true,
+      ctaLabel: "Talk to us about outsourcing IT",
+      ctaHref: "/contact",
+      builtForTags: ["Microfinance institutions", "SMEs", "Clinics", "NGOs", "Professional firms"].join("\n"),
+      triggerText: "No in-house IT team, or one stretched too thin",
       items: [
         "IT Helpdesk & End-User Support",
         "Server & Endpoint Management",
@@ -338,6 +373,7 @@ async function seedServices() {
       name: "Domain & Web Hosting Services",
       summary: "Secure, dependable hosting foundations for your digital presence.",
       icon: "globe",
+      pillar: "BUILD_RUN" as const,
       items: [
         "Domain Registration & Management",
         "SSL Certificate Management",
@@ -365,6 +401,12 @@ async function seedServices() {
         icon: service.icon,
         approach: service.approach,
         outcomes: service.outcomes,
+        pillar: service.pillar,
+        featured: "featured" in service ? service.featured : false,
+        ctaLabel: "ctaLabel" in service ? service.ctaLabel : undefined,
+        ctaHref: "ctaHref" in service ? service.ctaHref : undefined,
+        builtForTags: "builtForTags" in service ? service.builtForTags : undefined,
+        triggerText: "triggerText" in service ? service.triggerText : undefined,
         order: index,
         items: {
           create: service.items.map((label, itemIndex) => ({ label, order: itemIndex })),
@@ -382,26 +424,51 @@ async function seedIndustries() {
   // (matching CyFort's cybersecurity-advisory positioning), tapering to
   // broader commercial sectors, with Hospitality closing the Industries
   // grid as a wide banner tile.
+  const [cyberAsAService, dataProtection, itAuditAssurance] = await Promise.all([
+    prisma.service.findUnique({ where: { slug: "cybersecurity-as-a-service" } }),
+    prisma.service.findUnique({ where: { slug: "data-protection-compliance" } }),
+    prisma.service.findUnique({ where: { slug: "it-audit-technology-assurance" } }),
+  ]);
+
   const industries = [
     {
-      name: "Financial Services",
+      name: "Banks, Microfinance & SACCOs",
       blurb: "Banks, insurers, and fintechs navigating regulatory and cyber risk.",
       icon: "landmark",
+      featured: true,
+      drivingText:
+        "CBK cybersecurity guidance for banks and microfinance institutions, SASRA directives for SACCOs, and officials carrying personal liability for losses.",
+      startText: "A cyber maturity assessment, then Cybersecurity as a Service with board reporting.",
+      startServiceId: cyberAsAService?.id,
     },
     {
-      name: "Government",
+      name: "Government & Public Sector",
       blurb: "Public institutions modernizing systems while managing citizen data responsibly.",
       icon: "building",
+      featured: true,
+      drivingText: "Citizen data, system modernisation, and data-protection checks being built into public-sector audits.",
+      startText: "IT audit and data protection compliance review, with DR and continuity planning.",
+      startServiceId: itAuditAssurance?.id,
     },
     {
       name: "Healthcare",
       blurb: "Providers protecting patient information and critical care systems.",
       icon: "heart-pulse",
+      featured: true,
+      drivingText:
+        "Patient records are sensitive personal data. Hospitals face complaints, compensation orders and growing use of digital health systems.",
+      startText: "Data Protection Health Check, then an outsourced DPO and HMIS access review.",
+      startServiceId: dataProtection?.id,
     },
     {
       name: "NGOs & Development Partners",
       blurb: "Donor-funded programs safeguarding data and operational integrity.",
       icon: "heart-handshake",
+      featured: true,
+      drivingText:
+        "Donor and UN due diligence now asks about data protection, beneficiary data and cyber controls, often across several countries.",
+      startText: "Data protection and cyber policy pack, mapped to the donor's checklist.",
+      startServiceId: dataProtection?.id,
     },
     {
       name: "Manufacturing",
@@ -440,8 +507,8 @@ async function seedIndustries() {
   // Media table like every other admin-editable image in this app rather
   // than a hardcoded path.
   const industryImageFiles: Record<string, string> = {
-    "Financial Services": "financial-services.jpg",
-    Government: "government.jpg",
+    "Banks, Microfinance & SACCOs": "financial-services.jpg",
+    "Government & Public Sector": "government.jpg",
     Healthcare: "healthcare.jpg",
   };
 

@@ -7,4 +7,7 @@ export const contactSubmissionSchema = z.object({
   phone: z.string().optional(),
   subject: z.string().optional(),
   message: z.string().min(1, "Please enter a message."),
+  serviceInterest: z.string().optional(),
+  sector: z.string().optional(),
+  consent: z.literal("true", { message: "Please agree to the privacy policy." }).transform(() => true),
 });

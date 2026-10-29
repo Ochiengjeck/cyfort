@@ -24,8 +24,8 @@ export async function ThemeStyle() {
     "--color-brand-gold": safe(settings?.colorGold, "#C9A227"),
     "--color-brand-gold-dark": safe(settings?.colorGoldDark, "#9C7A3C"),
     "--color-brand-gold-light": safe(settings?.colorGoldLight, "#E8CE8F"),
-    "--color-brand-paper": safe(settings?.colorPaper, "#141414"),
-    "--color-brand-paper-alt": safe(settings?.colorPaperAlt, "#0A0A0B"),
+    "--color-brand-paper": safe(settings?.colorPaper, "#F7F6F2"),
+    "--color-brand-paper-alt": safe(settings?.colorPaperAlt, "#EFEDE6"),
     "--color-brand-muted": safe(settings?.colorMuted, "#9CA3AF"),
   };
 

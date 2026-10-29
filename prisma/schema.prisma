@@ -37,8 +37,8 @@ model SiteSettings {
   colorGold      String @default("#C9A227")
   colorGoldDark  String @default("#9C7A3C")
   colorGoldLight String @default("#E8CE8F")
-  colorPaper     String @default("#141414")
-  colorPaperAlt  String @default("#0A0A0B")
+  colorPaper     String @default("#F7F6F2")
+  colorPaperAlt  String @default("#EFEDE6")
   colorMuted     String @default("#9CA3AF")
 
   updatedAt DateTime @updatedAt
@@ -82,7 +82,15 @@ model AboutContent {
   closingHeading       String   @default("Securing Tomorrow's Digital Africa")
   closingBody          String
   closingQuote         String   @default("Together, we help organizations secure today, prepare for tomorrow, and build confidence in a digital future.")
-  updatedAt            DateTime @updatedAt
+
+  closingPrimaryCtaLabel   String  @default("Book a Health Check")
+  closingPrimaryCtaHref    String  @default("/contact")
+  closingSecondaryCtaLabel String  @default("Talk to a partner")
+  closingSecondaryCtaHref  String  @default("/contact")
+  trustStripLabel          String? @default("BUILT FOR ORGANISATIONS ANSWERING TO")
+  trustBadges              String? @default("ODPC · Data Protection Act 2019\nSASRA\nCentral Bank of Kenya\nDonor & UN due diligence\nISO/IEC 27001")
+
+  updatedAt DateTime @updatedAt
 }
 
 model Differentiator {
@@ -92,6 +100,12 @@ model Differentiator {
   body      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum ServicePillar {
+  ADVISE
+  SECURE_ASSURE
+  BUILD_RUN
 }
 
 model Service {
@@ -104,8 +118,18 @@ model Service {
   approach  String?
   outcomes  String?
   items     ServiceItem[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+
+  pillar       ServicePillar @default(SECURE_ASSURE)
+  featured     Boolean       @default(false)
+  ctaLabel     String?
+  ctaHref      String?
+  builtForTags String?
+  triggerText  String?
+
+  industries Industry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ServiceItem {
@@ -124,8 +148,15 @@ model Industry {
   blurb        String?
   icon         String?
   imageMediaId String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+
+  featured       Boolean  @default(false)
+  drivingText    String?
+  startText      String?
+  startServiceId String?
+  startService   Service? @relation(fields: [startServiceId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PromiseItem {
@@ -224,6 +255,11 @@ model ContactSubmission {
   status    String   @default("new")
   ipAddress String?
   userAgent String?
+
+  serviceInterest String?
+  sector          String?
+  consent         Boolean @default(false)
+
   createdAt DateTime @default(now())
 }
 

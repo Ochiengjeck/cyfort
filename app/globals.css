@@ -8,11 +8,10 @@
   --color-brand-gold: #c9a227;
   --color-brand-gold-dark: #9c7a3c;
   --color-brand-gold-light: #e8ce8f;
-  /* Dark theme sitewide — paper/paper-alt reuse the existing ink/dark
-     values so Section's "light" variants render as two complementary dark
-     tones instead of introducing new hex values. */
-  --color-brand-paper: #141414;
-  --color-brand-paper-alt: #0a0a0b;
+  /* Warm off-white "paper" tones — genuinely light surfaces, distinct from
+     the dark hero/navbar/footer/CTA bands. */
+  --color-brand-paper: #f7f6f2;
+  --color-brand-paper-alt: #efede6;
   --color-brand-muted: #9ca3af;
 
   /* Fixed foreground pairings — NOT admin-editable. Keeps every
@@ -20,8 +19,11 @@
      colors an admin chooses. */
   --color-on-dark: #ffffff;
   --color-on-gold: var(--color-brand-dark);
-  --color-on-paper: var(--color-on-dark);
+  --color-on-paper: #15140f;
   --color-muted-on-dark: rgba(255, 255, 255, 0.65);
+  --color-muted-on-paper: rgba(21, 20, 15, 0.62);
+  --color-border-on-paper: rgba(21, 20, 15, 0.12);
+  --color-surface-on-paper: rgba(21, 20, 15, 0.04);
 }
 
 @theme inline {
@@ -37,6 +39,9 @@
   --color-on-gold: var(--color-on-gold);
   --color-on-paper: var(--color-on-paper);
   --color-muted-on-dark: var(--color-muted-on-dark);
+  --color-muted-on-paper: var(--color-muted-on-paper);
+  --color-border-on-paper: var(--color-border-on-paper);
+  --color-surface-on-paper: var(--color-surface-on-paper);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-fraunces);
@@ -101,6 +106,15 @@ body {
   padding: 0.15em 0.4em;
   border-radius: 0.25em;
   font-size: 0.9em;
+}
+
+/* .prose-cyfort defaults to ink-on-paper headings; the one place it renders
+   on a dark Section (services/[slug] "Our Approach") needs the inverse. */
+.text-on-dark .prose-cyfort h1,
+.text-on-dark .prose-cyfort h2,
+.text-on-dark .prose-cyfort h3,
+.text-on-dark .prose-cyfort blockquote {
+  color: var(--color-on-dark);
 }
 
 /* Short-viewport hero fallback — keeps the homepage hero inside the

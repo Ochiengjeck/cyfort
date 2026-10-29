@@ -2,15 +2,18 @@ import Image from "next/image";
 import { Card } from "./card";
 import { AppIcon } from "./icons";
 
+type IndustryCardTone = "dark" | "paper";
+
 type IndustryCardProps = {
   name: string;
   blurb?: string | null;
   icon?: string | null;
   imageUrl?: string | null;
   featured?: boolean;
+  tone?: IndustryCardTone;
 };
 
-export function IndustryCard({ name, blurb, icon, imageUrl, featured = false }: IndustryCardProps) {
+export function IndustryCard({ name, blurb, icon, imageUrl, featured = false, tone = "dark" }: IndustryCardProps) {
   // The featured tile spans two grid rows, so its photo stacks above the
   // text (a tall card reads naturally top-to-bottom). Non-featured image
   // cards sit in a single, short row — stacking would leave the text panel
@@ -19,7 +22,7 @@ export function IndustryCard({ name, blurb, icon, imageUrl, featured = false }: 
   // featured tile inherits from stretching too tall.
   if (imageUrl && featured) {
     return (
-      <Card padded={false} className="items-stretch">
+      <Card padded={false} className="items-stretch" tone={tone}>
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           <Image
             src={imageUrl}
@@ -43,7 +46,7 @@ export function IndustryCard({ name, blurb, icon, imageUrl, featured = false }: 
 
   if (imageUrl) {
     return (
-      <Card padded={false}>
+      <Card padded={false} tone={tone}>
         <div className="flex h-full w-full flex-col sm:flex-row">
           <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden sm:aspect-auto sm:h-auto sm:w-2/5">
             <Image
@@ -68,7 +71,7 @@ export function IndustryCard({ name, blurb, icon, imageUrl, featured = false }: 
   }
 
   return (
-    <Card className="items-start">
+    <Card className="items-start" tone={tone}>
       <span
         className={`inline-flex items-center justify-center rounded-xl bg-brand-gold/10 text-brand-gold transition-colors duration-300 group-hover:bg-brand-gold/15 ${featured ? "h-14 w-14" : "h-11 w-11"}`}
       >

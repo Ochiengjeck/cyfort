@@ -35,7 +35,10 @@ export default async function AdminIndustriesPage() {
           items={items}
           basePath="/admin/industries"
           deleteAction={deleteIndustryAction}
-          columns={[{ header: "Name", render: (item) => item.name }]}
+          columns={[
+            { header: "Name", render: (item) => item.name },
+            { header: "Featured", render: (item) => (item.featured ? "Yes" : "—") },
+          ]}
         />
       </div>
     </div>

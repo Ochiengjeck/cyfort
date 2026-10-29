@@ -2,17 +2,20 @@ import { ArrowRight } from "lucide-react";
 import { Card, CardTopGlow } from "./card";
 import { AppIcon } from "./icons";
 
+type ServiceCardTone = "dark" | "paper";
+
 type ServiceCardProps = {
   slug: string;
   name: string;
   summary: string;
   icon?: string | null;
   featured?: boolean;
+  tone?: ServiceCardTone;
 };
 
-export function ServiceCard({ slug, name, summary, icon, featured = false }: ServiceCardProps) {
+export function ServiceCard({ slug, name, summary, icon, featured = false, tone = "dark" }: ServiceCardProps) {
   return (
-    <Card href={`/services/${slug}`} className="justify-between">
+    <Card href={`/services/${slug}`} className="justify-between" tone={tone}>
       <CardTopGlow />
       <div>
         <span

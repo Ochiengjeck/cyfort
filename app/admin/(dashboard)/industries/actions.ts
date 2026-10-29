@@ -11,6 +11,10 @@ function parse(formData: FormData) {
     blurb: formData.get("blurb") || undefined,
     icon: formData.get("icon") || undefined,
     imageMediaId: formData.get("imageMediaId") || undefined,
+    featured: formData.get("featured") === "on",
+    drivingText: formData.get("drivingText") || undefined,
+    startText: formData.get("startText") || undefined,
+    startServiceId: formData.get("startServiceId") || undefined,
   });
 }
 

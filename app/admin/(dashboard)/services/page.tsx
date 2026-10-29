@@ -41,6 +41,8 @@ export default async function AdminServicesPage() {
           columns={[
             { header: "Name", render: (item) => item.name },
             { header: "Slug", render: (item) => item.slug },
+            { header: "Pillar", render: (item) => item.pillar },
+            { header: "Key service", render: (item) => (item.featured ? "Yes" : "—") },
             { header: "Sub-services", render: (item) => item.items.length },
           ]}
         />

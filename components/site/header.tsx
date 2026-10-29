@@ -8,10 +8,21 @@ export async function Header() {
   // rather than letting it get baked into the static shell.
   await connection();
 
-  const [settings, navLinks] = await Promise.all([
+  const [settings, navLinks, servicesMenu] = await Promise.all([
     prisma.siteSettings.findFirst(),
     prisma.navLink.findMany({ orderBy: { order: "asc" } }),
+    prisma.service.findMany({
+      where: { featured: true },
+      orderBy: { order: "asc" },
+      select: { id: true, slug: true, name: true },
+    }),
   ]);
 
-  return <HeaderShell siteName={settings?.siteName ?? "CyFort Technologies Limited"} navLinks={navLinks} />;
+  return (
+    <HeaderShell
+      siteName={settings?.siteName ?? "CyFort Technologies Limited"}
+      navLinks={navLinks}
+      servicesMenu={servicesMenu}
+    />
+  );
 }

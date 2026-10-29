@@ -13,13 +13,13 @@ export const instant = false;
 
 export async function generateMetadata() {
   return buildMetadata({
-    title: "Insights",
+    title: "Blog",
     image: "/images/generated/banners/insights.jpg",
-    path: "/insights",
+    path: "/blog",
   });
 }
 
-export default async function InsightsPage() {
+export default async function BlogPage() {
   await connection();
   const posts = await prisma.insightPost.findMany({
     where: { published: true },
@@ -31,10 +31,10 @@ export default async function InsightsPage() {
   return (
     <>
       <PageBanner
-        lead="Perspectives on"
-        emphasis="technology & risk"
-        description="Practical perspectives on cybersecurity, technology strategy, and governance from the consultants who live it."
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Insights" }]}
+        lead="Practical guidance"
+        emphasis="for leaders"
+        description="Plain-language briefings on data protection, cyber governance and technology risk in Kenya and East Africa."
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Blog" }]}
         image={{ src: "/images/generated/banners/insights.jpg", objectPosition: "center" }}
       />
 
@@ -53,6 +53,7 @@ export default async function InsightsPage() {
                   publishedAt={lead.publishedAt}
                   coverUrl={await resolveMediaUrl(lead.coverMediaId)}
                   featured
+                  tone="paper"
                 />
               </Reveal>
 
@@ -69,6 +70,7 @@ export default async function InsightsPage() {
                           publishedAt={post.publishedAt}
                           coverUrl={await resolveMediaUrl(post.coverMediaId)}
                           reverse={index % 2 === 1}
+                          tone="paper"
                         />
                       </StaggerItem>
                     )),
@@ -78,7 +80,7 @@ export default async function InsightsPage() {
             </>
           ) : (
             <EmptyState
-              heading="Insights are on the way"
+              heading="Blog posts are on the way"
               message="We're preparing articles on technology strategy, cybersecurity, and governance — check back soon."
             />
           )}

@@ -11,6 +11,7 @@ type InsightCardProps = {
   coverUrl?: string | null;
   featured?: boolean;
   reverse?: boolean;
+  tone?: "dark" | "paper";
 };
 
 export function InsightCard({
@@ -22,6 +23,7 @@ export function InsightCard({
   coverUrl,
   featured = false,
   reverse = false,
+  tone = "dark",
 }: InsightCardProps) {
   // The featured tile spans two grid rows, so its cover image stacks above
   // the text (a tall card reads naturally top-to-bottom). Non-featured
@@ -31,7 +33,7 @@ export function InsightCard({
   // featured tile inherits from stretching too tall.
   if (featured) {
     return (
-      <Card href={`/insights/${slug}`} padded={false}>
+      <Card href={`/blog/${slug}`} padded={false} tone={tone}>
         <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-brand-dark via-brand-ink to-brand-dark">
           {coverUrl ? (
             <Image
@@ -77,7 +79,7 @@ export function InsightCard({
   }
 
   return (
-    <Card href={`/insights/${slug}`} padded={false}>
+    <Card href={`/blog/${slug}`} padded={false} tone={tone}>
       <div className={`flex h-full w-full flex-col sm:flex-row ${reverse ? "sm:flex-row-reverse" : ""}`}>
         <div
           className={`relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-gradient-to-br from-brand-dark via-brand-ink to-brand-dark sm:aspect-auto sm:h-auto sm:w-2/5 ${reverse ? "sm:bg-gradient-to-bl" : ""}`}

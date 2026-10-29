@@ -20,6 +20,9 @@ export async function submitContactAction(
     phone: formData.get("phone") || undefined,
     subject: formData.get("subject") || undefined,
     message: formData.get("message"),
+    serviceInterest: formData.get("serviceInterest") || undefined,
+    sector: formData.get("sector") || undefined,
+    consent: formData.get("consent"),
   });
 
   if (!parsed.success) {

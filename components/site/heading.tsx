@@ -28,6 +28,13 @@ const EMPHASIS_CLASSES: Record<HeadingTone, string> = {
   paper: "text-brand-gold-dark",
 };
 
+// Hero/banner tiers stack lead and emphasis on separate lines — guarantees
+// at least 2 lines regardless of content length, and (not incidentally)
+// stops the lead word and the italic gold emphasis word from ever sharing
+// a line and crowding the container's clipped edge, which is what was
+// slicing the last letter of the emphasis word off at narrower viewports.
+const STACKED_TIERS: HeadingTier[] = ["hero", "banner"];
+
 /**
  * Light-weight lead word + bold emphasis word pattern lifted from the
  * brand profile's "Who **We Are**" heading style.
@@ -41,10 +48,16 @@ export function Heading({
   className = "",
 }: HeadingProps) {
   const Tag = as;
+  const stacked = STACKED_TIERS.includes(tier);
+
   return (
     <Tag className={`font-display ${TIER_CLASSES[tier]} ${className}`}>
-      <span className="font-light">{lead} </span>
-      <span className={`font-semibold ${tier === "mega" ? "" : "italic"} ${EMPHASIS_CLASSES[tone]}`}>{emphasis}</span>
+      {lead ? <span className={stacked ? "block font-light" : "font-light"}>{lead}{stacked ? "" : " "}</span> : null}
+      <span
+        className={`${stacked ? "block pr-1" : ""} font-semibold ${tier === "mega" ? "" : "italic"} ${EMPHASIS_CLASSES[tone]}`}
+      >
+        {emphasis}
+      </span>
     </Tag>
   );
 }

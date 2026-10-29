@@ -4,15 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { isActiveLink } from "@/lib/nav";
 
 type MobileNavProps = {
   links: Array<{ id: string; label: string; href: string; openInNewTab: boolean }>;
+  servicesMenu?: Array<{ id: string; slug: string; name: string }>;
 };
 
-export function MobileNav({ links }: MobileNavProps) {
+export function MobileNav({ links, servicesMenu = [] }: MobileNavProps) {
   const [open, setOpen] = useState(false);
+  const [servicesExpanded, setServicesExpanded] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -20,7 +22,7 @@ export function MobileNav({ links }: MobileNavProps) {
     if (!open) return;
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") closeMenu();
     }
 
     document.addEventListener("keydown", onKeyDown);
@@ -33,11 +35,16 @@ export function MobileNav({ links }: MobileNavProps) {
     };
   }, [open]);
 
+  function closeMenu() {
+    setOpen(false);
+    setServicesExpanded(false);
+  }
+
   return (
     <div className="md:hidden">
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => (open ? closeMenu() : setOpen(true))}
         aria-expanded={open}
         aria-label="Toggle navigation menu"
         className="relative z-50 flex h-9 w-9 items-center justify-center"
@@ -77,7 +84,7 @@ export function MobileNav({ links }: MobileNavProps) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 top-16 z-40 bg-brand-dark/60 backdrop-blur-sm"
-              onClick={() => setOpen(false)}
+              onClick={closeMenu}
               aria-hidden="true"
             />
             <motion.nav
@@ -92,6 +99,78 @@ export function MobileNav({ links }: MobileNavProps) {
               <ul className="flex flex-col gap-1">
                 {links.map((link, index) => {
                   const active = isActiveLink(pathname, link.href);
+                  const isServices = link.href === "/services" && servicesMenu.length > 0;
+
+                  if (isServices) {
+                    return (
+                      <motion.li
+                        key={link.id}
+                        initial={{ opacity: 0, x: -12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.25, delay: index * 0.04 }}
+                      >
+                        <div
+                          className={`flex items-center rounded-lg border-l-2 ${
+                            active ? "border-brand-gold bg-white/5 text-brand-gold" : "border-transparent text-on-dark/90"
+                          }`}
+                        >
+                          <Link
+                            href={link.href}
+                            onClick={closeMenu}
+                            aria-current={active ? "page" : undefined}
+                            className="flex-1 px-2 py-2.5 text-base transition-colors hover:text-brand-gold"
+                          >
+                            {link.label}
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => setServicesExpanded((value) => !value)}
+                            aria-expanded={servicesExpanded}
+                            aria-label="Toggle services submenu"
+                            className="px-3 py-2.5 text-on-dark/60 transition-colors hover:text-brand-gold"
+                          >
+                            <ChevronDown
+                              className={`h-4 w-4 transition-transform duration-200 ${servicesExpanded ? "rotate-180" : ""}`}
+                              aria-hidden="true"
+                            />
+                          </button>
+                        </div>
+                        <AnimatePresence initial={false}>
+                          {servicesExpanded ? (
+                            <motion.ul
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="ml-4 overflow-hidden border-l border-white/10 pl-3"
+                            >
+                              {servicesMenu.map((service) => (
+                                <li key={service.id}>
+                                  <Link
+                                    href={`/services/${service.slug}`}
+                                    onClick={closeMenu}
+                                    className="block px-2 py-2 text-sm text-on-dark/70 transition-colors hover:text-brand-gold"
+                                  >
+                                    {service.name}
+                                  </Link>
+                                </li>
+                              ))}
+                              <li>
+                                <Link
+                                  href="/services"
+                                  onClick={closeMenu}
+                                  className="block px-2 py-2 text-sm font-medium text-brand-gold"
+                                >
+                                  All Services
+                                </Link>
+                              </li>
+                            </motion.ul>
+                          ) : null}
+                        </AnimatePresence>
+                      </motion.li>
+                    );
+                  }
+
                   return (
                     <motion.li
                       key={link.id}
@@ -103,7 +182,7 @@ export function MobileNav({ links }: MobileNavProps) {
                         href={link.href}
                         target={link.openInNewTab ? "_blank" : undefined}
                         rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-                        onClick={() => setOpen(false)}
+                        onClick={closeMenu}
                         aria-current={active ? "page" : undefined}
                         className={`block rounded-lg border-l-2 px-2 py-2.5 text-base transition-colors hover:bg-white/5 hover:text-brand-gold ${
                           active

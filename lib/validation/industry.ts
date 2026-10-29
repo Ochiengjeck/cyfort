@@ -5,4 +5,8 @@ export const industrySchema = z.object({
   blurb: z.string().optional(),
   icon: z.string().optional(),
   imageMediaId: z.string().optional(),
+  featured: z.boolean().default(false),
+  drivingText: z.string().optional(),
+  startText: z.string().optional(),
+  startServiceId: z.string().optional(),
 });

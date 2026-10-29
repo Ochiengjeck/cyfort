@@ -19,10 +19,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await prisma.insightPost.findUnique({ where: { slug } });
   const coverUrl = await resolveMediaUrl(post?.coverMediaId);
   return buildMetadata({
-    title: post?.title ?? "Insight",
+    title: post?.title ?? "Blog post",
     description: post?.excerpt,
     image: coverUrl ?? "/images/generated/banners/insights.jpg",
-    path: `/insights/${slug}`,
+    path: `/blog/${slug}`,
   });
 }
 
@@ -31,7 +31,7 @@ function estimateReadingMinutes(body: string): number {
   return Math.max(1, Math.round(words / 200));
 }
 
-export default async function InsightDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   await connection();
   const { slug } = await params;
   const post = await prisma.insightPost.findUnique({ where: { slug } });
@@ -73,7 +73,7 @@ export default async function InsightDetailPage({ params }: { params: Promise<{ 
         lead={rest.length > 0 ? lead : ""}
         emphasis={emphasis}
         description={post.authorName ? `By ${post.authorName}` : undefined}
-        breadcrumb={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: post.title }]}
+        breadcrumb={[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog" }, { label: post.title }]}
         image={{ src: "/images/generated/banners/insights.jpg", objectPosition: "center" }}
         meta={
           post.category || post.publishedAt ? (
@@ -139,7 +139,7 @@ export default async function InsightDetailPage({ params }: { params: Promise<{ 
         <Section variant="paper" className="px-6 py-24">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <Heading lead="More" emphasis="Insights" tone="dark" />
+              <Heading lead="More from the" emphasis="Blog" tone="dark" />
             </Reveal>
             <StaggerGrid className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {await Promise.all(
@@ -152,6 +152,7 @@ export default async function InsightDetailPage({ params }: { params: Promise<{ 
                       category={relatedPost.category}
                       publishedAt={relatedPost.publishedAt}
                       coverUrl={await resolveMediaUrl(relatedPost.coverMediaId)}
+                      tone="paper"
                     />
                   </StaggerItem>
                 )),

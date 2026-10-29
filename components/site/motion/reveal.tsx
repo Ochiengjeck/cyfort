@@ -5,6 +5,7 @@ import { motion, type Variants } from "framer-motion";
 type RevealProps = {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   delay?: number;
   y?: number;
   as?: "div" | "span";
@@ -19,11 +20,12 @@ const VARIANTS: Variants = {
  * Viewport-triggered fade/slide-in used in place of one-off animation code
  * per page. Animates once — it never re-hides on scroll-out.
  */
-export function Reveal({ children, className, delay = 0, y, as = "div" }: RevealProps) {
+export function Reveal({ children, className, style, delay = 0, y, as = "div" }: RevealProps) {
   const MotionTag = as === "span" ? motion.span : motion.div;
   return (
     <MotionTag
       className={className}
+      style={style}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-10% 0px" }}
