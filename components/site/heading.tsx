@@ -33,6 +33,9 @@ const EMPHASIS_CLASSES: Record<HeadingTone, string> = {
 // stops the lead word and the italic gold emphasis word from ever sharing
 // a line and crowding the container's clipped edge, which is what was
 // slicing the last letter of the emphasis word off at narrower viewports.
+// Lead is clamped to 1 line and emphasis to 2, so a stacked heading is
+// always 2-3 lines total regardless of how much copy an admin enters
+// (important now that hero copy comes from an editable slide carousel).
 const STACKED_TIERS: HeadingTier[] = ["hero", "banner"];
 
 /**
@@ -50,14 +53,30 @@ export function Heading({
   const Tag = as;
   const stacked = STACKED_TIERS.includes(tier);
 
+  if (stacked) {
+    // `line-clamp-N` sets `display: -webkit-box` itself — combining it with
+    // a separate `block` utility on the same element lets `block` win the
+    // display-property conflict and silently disable the clamp (text just
+    // wraps normally, uncapped). Each clamped span gets its own `block`
+    // wrapper instead, so the stacking and the clamp never fight.
+    return (
+      <Tag className={`font-display ${TIER_CLASSES[tier]} ${className}`}>
+        {lead ? (
+          <span className="block">
+            <span className="line-clamp-1 font-light">{lead}</span>
+          </span>
+        ) : null}
+        <span className="block">
+          <span className={`line-clamp-2 pr-1 font-semibold italic ${EMPHASIS_CLASSES[tone]}`}>{emphasis}</span>
+        </span>
+      </Tag>
+    );
+  }
+
   return (
     <Tag className={`font-display ${TIER_CLASSES[tier]} ${className}`}>
-      {lead ? <span className={stacked ? "block font-light" : "font-light"}>{lead}{stacked ? "" : " "}</span> : null}
-      <span
-        className={`${stacked ? "block pr-1" : ""} font-semibold ${tier === "mega" ? "" : "italic"} ${EMPHASIS_CLASSES[tone]}`}
-      >
-        {emphasis}
-      </span>
+      {lead ? <span className="font-light">{lead} </span> : null}
+      <span className={`font-semibold ${tier === "mega" ? "" : "italic"} ${EMPHASIS_CLASSES[tone]}`}>{emphasis}</span>
     </Tag>
   );
 }

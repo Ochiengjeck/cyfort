@@ -136,6 +136,31 @@ body {
   color: var(--color-on-dark);
 }
 
+/* Reserves consistent vertical space for the hero carousel's
+   eyebrow/headline/description/CTA block (components/site/hero-carousel.tsx)
+   so slides of different copy length don't change the hero's height or
+   shift "Scroll to explore" below it as the carousel auto-advances.
+   Sized generously for the heading's clamped 2-3 lines plus a 3-line
+   description at each breakpoint's font size. */
+.hero-slide-content {
+  min-height: 420px;
+}
+@media (min-width: 640px) {
+  .hero-slide-content {
+    min-height: 460px;
+  }
+}
+@media (min-width: 1024px) {
+  .hero-slide-content {
+    min-height: 500px;
+  }
+}
+@media (min-width: 1280px) {
+  .hero-slide-content {
+    min-height: 580px;
+  }
+}
+
 /* Short-viewport hero fallback — keeps the homepage hero inside the
    viewport on short/landscape screens (e.g. laptops with heavy browser
    chrome, landscape phones). */
@@ -146,6 +171,9 @@ body {
   }
   .hero-paragraph {
     display: none;
+  }
+  .hero-slide-content {
+    min-height: auto;
   }
 }
 

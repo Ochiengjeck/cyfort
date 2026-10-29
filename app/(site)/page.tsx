@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { buildMetadata } from "@/lib/metadata";
 import { Section } from "@/components/site/section";
 import { Heading } from "@/components/site/heading";
-import { BadgePill } from "@/components/site/badge-pill";
+import { HeroCarousel } from "@/components/site/hero-carousel";
 import { KeyServicesSection } from "@/components/site/key-services-section";
 import { CapabilitiesGrid } from "@/components/site/capabilities-grid";
 import { IconFeatureCard, DIFFERENTIATOR_ICONS } from "@/components/site/icon-feature-card";
@@ -32,8 +32,8 @@ export async function generateMetadata() {
 export default async function HomePage() {
   await connection();
 
-  const [hero, about, differentiators, services, industries, promises] = await Promise.all([
-    prisma.homeHero.findFirst(),
+  const [heroSlides, about, differentiators, services, industries, promises] = await Promise.all([
+    prisma.heroSlide.findMany({ orderBy: { order: "asc" } }),
     prisma.aboutContent.findFirst(),
     prisma.differentiator.findMany({ orderBy: { order: "asc" } }),
     prisma.service.findMany({ orderBy: { order: "asc" }, include: { items: true } }),
@@ -93,27 +93,7 @@ export default async function HomePage() {
         <div className="relative flex flex-1 items-center px-6 lg:px-12">
           <div className="mx-auto grid w-full max-w-7xl gap-16 lg:grid-cols-2 lg:items-center">
             <Reveal y={28}>
-              <BadgePill>{hero?.eyebrow ?? "Technology · Advisory · Cybersecurity"}</BadgePill>
-              <Heading
-                as="h1"
-                tier="hero"
-                tone="dark"
-                lead={hero?.headlineLead ?? "Securing"}
-                emphasis={hero?.headlineEmphasis ?? "Africa's Digital Future"}
-                className="mt-6"
-              />
-              <p className="hero-paragraph mt-6 max-w-xl text-lg leading-relaxed text-on-dark/80">
-                We empower organizations to navigate the cyber landscape, build resilient digital
-                ecosystems, and drive sustainable growth across the continent.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Button href={hero?.primaryCtaHref ?? "/contact"}>
-                  {hero?.primaryCtaLabel ?? "Book a Data Protection Health Check"}
-                </Button>
-                <Button href={hero?.secondaryCtaHref ?? "/services"} variant="outline">
-                  {hero?.secondaryCtaLabel ?? "Explore our services"}
-                </Button>
-              </div>
+              <HeroCarousel slides={heroSlides} />
               <div className="mt-12 flex items-center gap-1.5 text-sm text-on-dark/50">
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
                 Scroll to explore

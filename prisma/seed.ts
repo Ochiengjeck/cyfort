@@ -67,20 +67,51 @@ async function seedNavLinks() {
   });
 }
 
-async function seedHomeHero() {
-  const existing = await prisma.homeHero.findFirst();
-  if (existing) return;
+async function seedHeroSlides() {
+  const existing = await prisma.heroSlide.count();
+  if (existing > 0) return;
 
-  await prisma.homeHero.create({
-    data: {
+  // Only the eyebrow/headline/description/CTA block rotates between these
+  // slides — the hero's background image, stats card, and marquee
+  // (app/(site)/page.tsx) are fixed and shared across all of them.
+  const slides = [
+    {
       eyebrow: "TECHNOLOGY · ADVISORY · CYBERSECURITY",
       headlineLead: "Securing",
       headlineEmphasis: "Digital Growth Across Africa",
+      description:
+        "We empower organizations to navigate the cyber landscape, build resilient digital ecosystems, and drive sustainable growth across the continent.",
       primaryCtaLabel: "Book a Data Protection Health Check",
       primaryCtaHref: "/contact",
       secondaryCtaLabel: "Explore our services",
       secondaryCtaHref: "/services",
     },
+    {
+      eyebrow: "CYBERSECURITY · GOVERNANCE · RISK",
+      headlineLead: "A Security Function,",
+      headlineEmphasis: "Without the Headcount",
+      description:
+        "We lead your cybersecurity programme end-to-end — monitoring, patching, staff training and incident response — so your board stays informed without building an in-house team.",
+      primaryCtaLabel: "Request a Cyber Assessment",
+      primaryCtaHref: "/contact",
+      secondaryCtaLabel: "See Cybersecurity as a Service",
+      secondaryCtaHref: "/services/cybersecurity-as-a-service",
+    },
+    {
+      eyebrow: "IT AUDIT · ASSURANCE · OUTSOURCED IT",
+      headlineLead: "Independent Assurance",
+      headlineEmphasis: "Your Board Can Rely On",
+      description:
+        "From ITGC reviews to running your entire IT function, we give audit committees and leadership teams a clear, independent view of technology risk.",
+      primaryCtaLabel: "Request an ITGC Review",
+      primaryCtaHref: "/contact",
+      secondaryCtaLabel: "Explore IT Audit & Assurance",
+      secondaryCtaHref: "/services/it-audit-technology-assurance",
+    },
+  ];
+
+  await prisma.heroSlide.createMany({
+    data: slides.map((slide, index) => ({ ...slide, order: index })),
   });
 }
 
@@ -1181,7 +1212,7 @@ async function main() {
   await seedAdminUser();
   await seedSiteSettings();
   await seedNavLinks();
-  await seedHomeHero();
+  await seedHeroSlides();
   await seedAboutContent();
   await seedDifferentiators();
   await seedServices();

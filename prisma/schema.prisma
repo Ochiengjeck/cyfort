@@ -54,15 +54,22 @@ model NavLink {
   updatedAt    DateTime @updatedAt
 }
 
-model HomeHero {
+// Multiple rows power the home hero carousel (app/(site)/page.tsx +
+// components/site/hero-carousel.tsx) — only the eyebrow/headline/
+// description/CTA block rotates between slides; the hero's background
+// image, stats card, and marquee are fixed and not per-slide.
+model HeroSlide {
   id                String   @id @default(cuid())
+  order             Int      @default(0)
   eyebrow           String   @default("TECHNOLOGY · ADVISORY · CYBERSECURITY")
   headlineLead      String   @default("Securing")
   headlineEmphasis  String   @default("Digital Growth Across Africa")
-  primaryCtaLabel   String   @default("Explore Our Services")
-  primaryCtaHref    String   @default("/services")
-  secondaryCtaLabel String   @default("Talk to Us")
-  secondaryCtaHref  String   @default("/contact")
+  description       String   @default("We empower organizations to navigate the cyber landscape, build resilient digital ecosystems, and drive sustainable growth across the continent.")
+  primaryCtaLabel   String   @default("Book a Data Protection Health Check")
+  primaryCtaHref    String   @default("/contact")
+  secondaryCtaLabel String   @default("Explore our services")
+  secondaryCtaHref  String   @default("/services")
+  createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
 

@@ -1,32 +1,51 @@
+import Link from "next/link";
 import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { FormField } from "@/components/admin/form-field";
-import { SubmitButton } from "@/components/admin/submit-button";
-import { updateHomeHeroAction } from "./actions";
+import { CollectionList } from "@/components/admin/collection-list";
+import { OrderEditor } from "@/components/admin/order-editor";
+import { deleteHeroSlideAction, reorderHeroSlidesAction } from "./actions";
 
 export const instant = false;
 
 export default async function AdminHomeHeroPage() {
   await connection();
-  const hero = await prisma.homeHero.findFirst();
+  const slides = await prisma.heroSlide.findMany({ orderBy: { order: "asc" } });
 
   return (
-    <div className="max-w-xl">
-      <h1 className="text-2xl font-semibold text-white">Home Hero</h1>
-      <p className="mt-1 text-sm text-white/50">The headline section at the top of the homepage.</p>
-
-      <form action={updateHomeHeroAction} className="mt-8 flex flex-col gap-5">
-        <FormField label="Eyebrow" name="eyebrow" defaultValue={hero?.eyebrow} required />
-        <FormField label="Headline — light word" name="headlineLead" defaultValue={hero?.headlineLead} required />
-        <FormField label="Headline — emphasis" name="headlineEmphasis" defaultValue={hero?.headlineEmphasis} required />
-        <FormField label="Primary CTA Label" name="primaryCtaLabel" defaultValue={hero?.primaryCtaLabel} required />
-        <FormField label="Primary CTA Link" name="primaryCtaHref" defaultValue={hero?.primaryCtaHref} required />
-        <FormField label="Secondary CTA Label" name="secondaryCtaLabel" defaultValue={hero?.secondaryCtaLabel} required />
-        <FormField label="Secondary CTA Link" name="secondaryCtaHref" defaultValue={hero?.secondaryCtaHref} required />
+    <div>
+      <div className="flex items-center justify-between">
         <div>
-          <SubmitButton />
+          <h1 className="text-2xl font-semibold text-white">Home Hero</h1>
+          <p className="mt-1 text-sm text-white/50">
+            The headline carousel at the top of the homepage. Only the eyebrow, headline,
+            description, and CTAs rotate between slides — add more than one to enable the
+            carousel.
+          </p>
         </div>
-      </form>
+        <Link
+          href="/admin/home/new"
+          className="rounded-md bg-brand-gold px-4 py-2 text-sm font-semibold text-brand-dark hover:opacity-90"
+        >
+          New Slide
+        </Link>
+      </div>
+
+      <div className="mt-8">
+        <OrderEditor
+          items={slides.map((slide) => ({ id: slide.id, label: slide.headlineEmphasis, order: slide.order }))}
+          reorderAction={reorderHeroSlidesAction}
+        />
+        <CollectionList
+          items={slides}
+          basePath="/admin/home"
+          deleteAction={deleteHeroSlideAction}
+          emptyMessage="No hero slides yet — add at least one so the homepage has a headline."
+          columns={[
+            { header: "Eyebrow", render: (item) => item.eyebrow },
+            { header: "Headline", render: (item) => `${item.headlineLead} ${item.headlineEmphasis}` },
+          ]}
+        />
+      </div>
     </div>
   );
 }
