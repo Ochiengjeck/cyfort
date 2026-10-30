@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { THEME_COOKIE_NAME, parseTheme } from "@/lib/theme/constants";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { HeaderShell } from "./header-shell";
 
 export async function Header() {
@@ -21,12 +22,17 @@ export async function Header() {
     cookies(),
   ]);
 
+  const whatsappHref = settings?.whatsappNumber
+    ? buildWhatsAppLink(settings.whatsappNumber, settings.whatsappMessage ?? undefined)
+    : undefined;
+
   return (
     <HeaderShell
       siteName={settings?.siteName ?? "CyFort Technologies Limited"}
       navLinks={navLinks}
       servicesMenu={servicesMenu}
       theme={parseTheme(themeCookie.get(THEME_COOKIE_NAME)?.value)}
+      whatsappHref={whatsappHref}
     />
   );
 }

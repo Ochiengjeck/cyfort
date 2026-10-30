@@ -20,6 +20,8 @@ export async function updateGeneralSettingsAction(formData: FormData) {
     contactEmail: formData.get("contactEmail"),
     contactPhone: formData.get("contactPhone"),
     contactAddress: formData.get("contactAddress") || undefined,
+    whatsappNumber: formData.get("whatsappNumber") || undefined,
+    whatsappMessage: formData.get("whatsappMessage") || undefined,
     linkedinUrl: formData.get("linkedinUrl") || undefined,
     twitterUrl: formData.get("twitterUrl") || undefined,
     facebookUrl: formData.get("facebookUrl") || undefined,

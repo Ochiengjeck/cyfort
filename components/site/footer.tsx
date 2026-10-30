@@ -3,10 +3,12 @@ import Image from "next/image";
 import { connection } from "next/server";
 import { ArrowRight, Mail, Phone, MapPin, Building2, Boxes, Compass } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { DotGrid } from "./decorative/dot-grid";
 import { MeshBlob } from "./decorative/mesh-blob";
 import { ArcSweep } from "./decorative/arc-sweep";
 import { NewsletterForm } from "./newsletter-form";
+import { WhatsAppIcon } from "./whatsapp-icon";
 
 // lucide-react dropped brand/social-logo icons entirely (trademark policy) —
 // these stay as hand-coded inline SVGs, same as before the redesign.
@@ -122,6 +124,19 @@ export async function Footer() {
                 <li className="flex items-center gap-2">
                   <Phone className="h-3.5 w-3.5 shrink-0 text-on-dark/40" aria-hidden="true" />
                   {settings.contactPhone}
+                </li>
+              ) : null}
+              {settings?.whatsappNumber ? (
+                <li className="flex items-center gap-2">
+                  <WhatsAppIcon className="h-3.5 w-3.5 shrink-0 text-[#25D366]" />
+                  <a
+                    href={buildWhatsAppLink(settings.whatsappNumber, settings.whatsappMessage ?? undefined)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-brand-gold"
+                  >
+                    WhatsApp us
+                  </a>
                 </li>
               ) : null}
               {settings?.contactAddress ? (

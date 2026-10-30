@@ -11,6 +11,8 @@ export const generalSettingsSchema = z.object({
   contactEmail: z.string().email(),
   contactPhone: z.string().min(1),
   contactAddress: z.string().optional(),
+  whatsappNumber: z.string().optional(),
+  whatsappMessage: z.string().optional(),
   linkedinUrl: z.string().optional(),
   twitterUrl: z.string().optional(),
   facebookUrl: z.string().optional(),

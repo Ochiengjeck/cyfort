@@ -8,6 +8,7 @@ import { ChevronDown } from "lucide-react";
 import { MobileNav } from "./mobile-nav";
 import { Button } from "./button";
 import { ThemeToggle } from "./theme-toggle";
+import { WhatsAppIcon } from "./whatsapp-icon";
 import { isActiveLink } from "@/lib/nav";
 import type { Theme } from "@/lib/theme/constants";
 
@@ -19,6 +20,7 @@ type HeaderShellProps = {
   navLinks: NavLinkItem[];
   servicesMenu: ServiceMenuItem[];
   theme: Theme;
+  whatsappHref?: string;
 };
 
 const SCROLL_THRESHOLD = 24;
@@ -30,7 +32,7 @@ const SCROLL_THRESHOLD = 24;
  * MobileNav's dropdown position simple, and mobile viewports are already
  * space-constrained) — only the `md:` classes below respond to `scrolled`.
  */
-export function HeaderShell({ siteName, navLinks, servicesMenu, theme }: HeaderShellProps) {
+export function HeaderShell({ siteName, navLinks, servicesMenu, theme, whatsappHref }: HeaderShellProps) {
   const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -170,12 +172,23 @@ export function HeaderShell({ siteName, navLinks, servicesMenu, theme }: HeaderS
 
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle theme={theme} />
+          {whatsappHref ? (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Chat with us on WhatsApp"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-on-dark/80 transition-colors hover:border-[#25D366] hover:text-[#25D366]"
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+            </a>
+          ) : null}
           <Button href="/contact" size="sm">
             Talk to Us
           </Button>
         </div>
 
-        <MobileNav links={navLinks} servicesMenu={servicesMenu} theme={theme} />
+        <MobileNav links={navLinks} servicesMenu={servicesMenu} theme={theme} whatsappHref={whatsappHref} />
       </div>
     </header>
   );

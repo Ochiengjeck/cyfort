@@ -7,15 +7,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { isActiveLink } from "@/lib/nav";
 import { ThemeToggle } from "./theme-toggle";
+import { WhatsAppIcon } from "./whatsapp-icon";
 import type { Theme } from "@/lib/theme/constants";
 
 type MobileNavProps = {
   links: Array<{ id: string; label: string; href: string; openInNewTab: boolean }>;
   servicesMenu?: Array<{ id: string; slug: string; name: string }>;
   theme: Theme;
+  whatsappHref?: string;
 };
 
-export function MobileNav({ links, servicesMenu = [], theme }: MobileNavProps) {
+export function MobileNav({ links, servicesMenu = [], theme, whatsappHref }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const [servicesExpanded, setServicesExpanded] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -199,6 +201,20 @@ export function MobileNav({ links, servicesMenu = [], theme }: MobileNavProps) {
                   );
                 })}
               </ul>
+
+              {whatsappHref ? (
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMenu}
+                  className="mt-4 flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white transition-transform duration-200 active:scale-[0.98]"
+                  style={{ backgroundColor: "#25D366" }}
+                >
+                  <WhatsAppIcon className="h-4 w-4" />
+                  Chat on WhatsApp
+                </a>
+              ) : null}
 
               <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
                 <span className="text-sm text-on-dark/60">Theme</span>

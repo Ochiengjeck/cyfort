@@ -1,6 +1,7 @@
 import { MotionConfig } from "framer-motion";
 import { Header } from "@/components/site/header";
 import { Footer } from "@/components/site/footer";
+import { WhatsAppFloat } from "@/components/site/whatsapp-float";
 import { OrganizationJsonLd } from "@/components/site/organization-json-ld";
 
 // The header/footer read live SiteSettings/NavLink data on every request —
@@ -21,6 +22,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
         <Footer />
       </div>
+      <WhatsAppFloat />
     </MotionConfig>
   );
 }

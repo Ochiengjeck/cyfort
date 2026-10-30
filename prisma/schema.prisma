@@ -27,6 +27,8 @@ model SiteSettings {
   contactEmail    String  @default("info@cyfort.africa")
   contactPhone    String  @default("+254 7__ ___ ___")
   contactAddress  String?
+  whatsappNumber  String?
+  whatsappMessage String? @default("Hi CyFort, I'd like to talk about...")
   linkedinUrl     String?
   twitterUrl      String?
   facebookUrl     String?

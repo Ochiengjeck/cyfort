@@ -96,12 +96,14 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             className={`hero-slide-content flex flex-col justify-center ${slides.length > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
           >
             <div>
+              <BadgePill>{slide.eyebrow}</BadgePill>
               <Heading
                 as="h1"
                 tier="hero"
                 tone="dark"
                 lead={slide.headlineLead}
                 emphasis={slide.headlineEmphasis}
+                className="mt-6"
               />
               <p className="hero-paragraph mt-6 line-clamp-3 max-w-xl text-lg leading-relaxed text-on-dark/80">
                 {slide.description}

@@ -177,6 +177,21 @@ body {
   }
 }
 
+/* Slow, gentle attention ring behind the floating WhatsApp button
+   (components/site/whatsapp-float-button.tsx) — expands and fades rather
+   than the fast/busy default `animate-ping`, so it reads as a calm pulse
+   instead of a notification badge. */
+@keyframes whatsapp-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
 @keyframes scroll-cue-bounce {
   0%,
   100% {

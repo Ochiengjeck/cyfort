@@ -1,10 +1,12 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { buildMetadata } from "@/lib/metadata";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Section } from "@/components/site/section";
 import { PageBanner } from "@/components/site/page-banner";
 import { Reveal } from "@/components/site/motion/reveal";
+import { WhatsAppIcon } from "@/components/site/whatsapp-icon";
 import { ContactForm } from "./contact-form";
 
 export const instant = false;
@@ -40,6 +42,10 @@ export default async function ContactPage() {
   const serviceOptions = services.map((service) => ({ value: service.name, label: service.name }));
   const sectorOptions = industries.map((industry) => ({ value: industry.name, label: industry.name }));
 
+  const whatsappHref = settings?.whatsappNumber
+    ? buildWhatsAppLink(settings.whatsappNumber, settings.whatsappMessage ?? undefined)
+    : null;
+
   return (
     <>
       <PageBanner
@@ -53,6 +59,31 @@ export default async function ContactPage() {
       <Section variant="dark" className="px-6 py-20">
         <div className="mx-auto grid max-w-5xl gap-12 sm:grid-cols-[1fr_1.2fr]">
           <Reveal className="flex flex-col gap-4">
+            {whatsappHref ? (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3 rounded-xl border p-4 transition-colors"
+                style={{ borderColor: "rgba(37,211,102,0.3)", backgroundColor: "rgba(37,211,102,0.08)" }}
+              >
+                <span
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
+                  style={{ backgroundColor: "#25D366" }}
+                >
+                  <WhatsAppIcon className="h-5 w-5" />
+                </span>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-on-dark">Prefer an instant reply?</p>
+                  <p className="text-xs text-on-dark/60">Chat with us on WhatsApp</p>
+                </div>
+                <ArrowRight
+                  className="h-4 w-4 shrink-0 text-on-dark/40 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </a>
+            ) : null}
+
             <h2 className="text-sm font-semibold text-brand-gold">Contact details</h2>
             {details.map((detail) => {
               const Icon = detail.icon;

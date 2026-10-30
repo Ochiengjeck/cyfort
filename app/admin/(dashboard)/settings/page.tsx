@@ -36,6 +36,19 @@ export default async function AdminSettingsPage() {
               <FormField label="Contact Email" name="contactEmail" type="email" defaultValue={settings.contactEmail} required />
               <FormField label="Contact Phone" name="contactPhone" defaultValue={settings.contactPhone} required />
               <FormField label="Contact Address" name="contactAddress" defaultValue={settings.contactAddress} />
+              <FormField
+                label="WhatsApp Number"
+                name="whatsappNumber"
+                defaultValue={settings.whatsappNumber}
+                hint="Any format, e.g. +254 712 345 678 — used to build the WhatsApp chat link. Leave blank to hide WhatsApp across the site."
+              />
+              <TextareaField
+                label="WhatsApp Starter Message"
+                name="whatsappMessage"
+                defaultValue={settings.whatsappMessage}
+                rows={2}
+                hint="Pre-filled in the chat when a visitor opens WhatsApp."
+              />
               <FormField label="LinkedIn URL" name="linkedinUrl" defaultValue={settings.linkedinUrl} />
               <FormField label="Twitter / X URL" name="twitterUrl" defaultValue={settings.twitterUrl} />
               <FormField label="Facebook URL" name="facebookUrl" defaultValue={settings.facebookUrl} />

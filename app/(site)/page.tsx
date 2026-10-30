@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { buildMetadata } from "@/lib/metadata";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Section } from "@/components/site/section";
 import { Heading } from "@/components/site/heading";
 import { HeroCarousel } from "@/components/site/hero-carousel";
@@ -13,6 +14,7 @@ import { IconFeatureCard, DIFFERENTIATOR_ICONS } from "@/components/site/icon-fe
 import { PromiseTimeline, PROMISE_ICONS } from "@/components/site/promise-timeline";
 import { Button } from "@/components/site/button";
 import { AppIcon } from "@/components/site/icons";
+import { WhatsAppIcon } from "@/components/site/whatsapp-icon";
 import { DotGrid } from "@/components/site/decorative/dot-grid";
 import { Marquee } from "@/components/site/decorative/marquee";
 import { RadarChart } from "@/components/site/decorative/radar-chart";
@@ -32,14 +34,19 @@ export async function generateMetadata() {
 export default async function HomePage() {
   await connection();
 
-  const [heroSlides, about, differentiators, services, industries, promises] = await Promise.all([
+  const [heroSlides, about, differentiators, services, industries, promises, settings] = await Promise.all([
     prisma.heroSlide.findMany({ orderBy: { order: "asc" } }),
     prisma.aboutContent.findFirst(),
     prisma.differentiator.findMany({ orderBy: { order: "asc" } }),
     prisma.service.findMany({ orderBy: { order: "asc" }, include: { items: true } }),
     prisma.industry.findMany({ orderBy: { order: "asc" } }),
     prisma.promiseItem.findMany({ orderBy: { order: "asc" } }),
+    prisma.siteSettings.findFirst(),
   ]);
+
+  const whatsappHref = settings?.whatsappNumber
+    ? buildWhatsAppLink(settings.whatsappNumber, settings.whatsappMessage ?? undefined)
+    : null;
 
   const featuredServices = services.filter((service) => service.featured);
 
@@ -287,6 +294,18 @@ export default async function HomePage() {
                   >
                     {about.closingSecondaryCtaLabel}
                   </Link>
+                  {whatsappHref ? (
+                    <a
+                      href={whatsappHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Chat with us on WhatsApp"
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-[0_8px_20px_-6px_rgba(37,211,102,0.6)] transition-transform duration-300 hover:-translate-y-0.5"
+                      style={{ backgroundColor: "#25D366" }}
+                    >
+                      <WhatsAppIcon className="h-5 w-5" />
+                    </a>
+                  ) : null}
                 </div>
               </div>
             </Reveal>
