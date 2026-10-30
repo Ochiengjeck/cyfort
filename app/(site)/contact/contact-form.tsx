@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/site/button";
@@ -20,6 +20,14 @@ type ContactFormProps = {
 
 export function ContactForm({ serviceOptions, sectorOptions }: ContactFormProps) {
   const [state, formAction, isPending] = useActionState(submitContactAction, initialState);
+  const errorRef = useRef<HTMLParagraphElement>(null);
+
+  // Move focus to the error so screen reader users are told the submission
+  // failed and land exactly where the message is, instead of a silent
+  // visual-only change after a failed submit.
+  useEffect(() => {
+    if (state.error) errorRef.current?.focus();
+  }, [state.error]);
 
   return (
     <AnimatePresence mode="wait">
@@ -126,7 +134,11 @@ export function ContactForm({ serviceOptions, sectorOptions }: ContactFormProps)
             </span>
           </label>
 
-          {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
+          {state.error ? (
+            <p ref={errorRef} role="alert" tabIndex={-1} className="text-sm text-red-600 outline-none">
+              {state.error}
+            </p>
+          ) : null}
 
           <Button type="submit" disabled={isPending} variant="primary" className="mt-2 w-fit disabled:opacity-60">
             {isPending ? "Sending…" : "Request a call"}

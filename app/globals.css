@@ -38,7 +38,9 @@
   --color-brand-paper: #f7f6f2;
   --color-brand-paper-alt: #efede6;
   --color-on-paper: #15140f;
-  --color-brand-muted: #9ca3af;
+  /* #9CA3AF (the old default) read ~2:1 against this background — well
+     under WCAG's 4.5:1 minimum for body text. #6B6A65 clears ~5:1. */
+  --color-brand-muted: #6b6a65;
   --color-muted-on-paper: rgba(21, 20, 15, 0.62);
   --color-border-on-paper: rgba(21, 20, 15, 0.12);
   --color-surface-on-paper: rgba(21, 20, 15, 0.04);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { BadgePill } from "./badge-pill";
 import { Heading } from "./heading";
 import { Button } from "./button";
@@ -37,14 +37,32 @@ const SLIDE_VARIANTS: Variants = {
  * Only the eyebrow/headline/description/CTA block rotates — the hero's
  * background image, "Cyber Resilience" stats card, and the services/
  * industries marquee (rendered by the parent, app/(site)/page.tsx) stay
- * fixed across slides. Advances on a timer (paused on hover/focus/drag),
- * and scrolls horizontally via swipe/drag, arrow buttons, or the dot
- * indicators — direction-aware so the slide always moves the way the
- * triggering interaction implies.
+ * fixed across slides. Advances on a timer (paused on hover/focus/drag, a
+ * manual play/pause toggle, and OS-level prefers-reduced-motion — WCAG
+ * 2.2.2 requires auto-updating content to be pausable), and scrolls
+ * horizontally via swipe/drag, arrow buttons, or the dot indicators —
+ * direction-aware so the slide always moves the way the triggering
+ * interaction implies.
  */
 export function HeroCarousel({ slides }: HeroCarouselProps) {
   const [[index, direction], setSlide] = useState<[number, number]>([0, 0]);
-  const [paused, setPaused] = useState(false);
+  const [hoverPaused, setHoverPaused] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  // Lazy initializer reads the current preference directly on first render
+  // (SSR-safe — `window` is guarded), so the effect below only needs to
+  // subscribe for later changes rather than also setting the initial value.
+  const [reducedMotion, setReducedMotion] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    function onChange(event: MediaQueryListEvent) {
+      setReducedMotion(event.matches);
+    }
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
 
   function go(step: number) {
     setSlide(([current]) => [(current + step + slides.length) % slides.length, step]);
@@ -54,22 +72,24 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
     setSlide(([current]) => [target, target > current ? 1 : -1]);
   }
 
+  const autoAdvanceDisabled = slides.length <= 1 || reducedMotion || userPaused || hoverPaused;
+
   useEffect(() => {
-    if (slides.length <= 1 || paused) return;
+    if (autoAdvanceDisabled) return;
     const timer = setInterval(() => go(1), AUTO_ADVANCE_MS);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `go` closes over current state via the setSlide updater, so it doesn't need to be a dependency
-  }, [slides.length, paused]);
+  }, [autoAdvanceDisabled]);
 
   const slide = slides[index];
   if (!slide) return null;
 
   return (
     <div
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
+      onMouseEnter={() => setHoverPaused(true)}
+      onMouseLeave={() => setHoverPaused(false)}
+      onFocus={() => setHoverPaused(true)}
+      onBlur={() => setHoverPaused(false)}
     >
       <div className="relative overflow-hidden">
         <AnimatePresence mode="wait" custom={direction} initial={false}>
@@ -84,9 +104,9 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
             drag={slides.length > 1 ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.2}
-            onDragStart={() => setPaused(true)}
+            onDragStart={() => setHoverPaused(true)}
             onDragEnd={(_event, info) => {
-              setPaused(false);
+              setHoverPaused(false);
               if (info.offset.x < -SWIPE_DISTANCE_THRESHOLD || info.velocity.x < -SWIPE_VELOCITY_THRESHOLD) {
                 go(1);
               } else if (info.offset.x > SWIPE_DISTANCE_THRESHOLD || info.velocity.x > SWIPE_VELOCITY_THRESHOLD) {
@@ -154,6 +174,18 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           >
             <ChevronRight className="h-4 w-4" aria-hidden="true" />
           </button>
+
+          {!reducedMotion ? (
+            <button
+              type="button"
+              onClick={() => setUserPaused((value) => !value)}
+              aria-label={userPaused ? "Resume auto-advancing slides" : "Pause auto-advancing slides"}
+              aria-pressed={userPaused}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-on-dark/60 transition-colors hover:border-brand-gold hover:text-brand-gold"
+            >
+              {userPaused ? <Play className="h-3.5 w-3.5" aria-hidden="true" /> : <Pause className="h-3.5 w-3.5" aria-hidden="true" />}
+            </button>
+          ) : null}
         </div>
       ) : null}
     </div>

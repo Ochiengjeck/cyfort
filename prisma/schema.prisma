@@ -41,7 +41,7 @@ model SiteSettings {
   colorGoldLight String @default("#E8CE8F")
   colorPaper     String @default("#F7F6F2")
   colorPaperAlt  String @default("#EFEDE6")
-  colorMuted     String @default("#9CA3AF")
+  colorMuted     String @default("#6B6A65")
 
   updatedAt DateTime @updatedAt
 }

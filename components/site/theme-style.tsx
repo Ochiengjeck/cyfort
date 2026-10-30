@@ -35,7 +35,7 @@ export async function ThemeStyle() {
   const lightVars = {
     "--color-brand-paper": safe(settings?.colorPaper, "#F7F6F2"),
     "--color-brand-paper-alt": safe(settings?.colorPaperAlt, "#EFEDE6"),
-    "--color-brand-muted": safe(settings?.colorMuted, "#9CA3AF"),
+    "--color-brand-muted": safe(settings?.colorMuted, "#6B6A65"),
   };
 
   const toDeclarations = (vars: Record<string, string>) =>
